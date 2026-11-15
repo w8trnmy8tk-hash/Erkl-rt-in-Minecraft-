@@ -185,6 +185,33 @@ const gregorHuman = new THREE.Group();
   room.add(gregorHuman);
 }
 
+// --- Grete (Schwester), Minecraft-Proportionen, ganzer Körper ---
+function humanoid(o) {
+  const g = new THREE.Group();
+  const solid = (c, seed) => M(tex(4, 4, (cx, r) => noiseFill(cx, r, 4, 4, c, 0.06), seed));
+  const skin = solid(o.skin, 81), hair = solid(o.hair, 82), top = solid(o.top, 83), bot = solid(o.bottom, 84), shoe = solid(0x2a1c14, 85);
+  const face = tex(8, 8, (c) => { c.fillStyle = hex(o.skin); c.fillRect(0, 0, 8, 8); c.fillStyle = hex(o.hair); c.fillRect(0, 0, 8, 2); c.fillRect(0, 2, 1, 4); c.fillRect(7, 2, 1, 4);
+    c.fillStyle = '#ffffff'; c.fillRect(1, 4, 2, 1); c.fillRect(5, 4, 2, 1); c.fillStyle = o.eye; c.fillRect(2, 4, 1, 1); c.fillRect(5, 4, 1, 1);
+    c.fillStyle = hex(shade(o.hair, 0.8)); c.fillRect(1, 3, 2, 1); c.fillRect(5, 3, 2, 1);
+    c.fillStyle = hex(shade(o.skin, 0.85)); c.fillRect(3, 5, 2, 1); c.fillStyle = '#8a4a40'; c.fillRect(3, 6, 2, 1); }, 86);
+  const legL = new THREE.Group(), legR = new THREE.Group(); legL.position.set(-0.125, 0.72, 0); legR.position.set(0.125, 0.72, 0);
+  legL.add(box(0.24, 0.72, 0.24, skin, 0, -0.36, 0)); legR.add(box(0.24, 0.72, 0.24, skin, 0, -0.36, 0));
+  legL.add(box(0.25, 0.12, 0.26, shoe, 0, -0.66, 0.01)); legR.add(box(0.25, 0.12, 0.26, shoe, 0, -0.66, 0.01));
+  g.add(legL, legR);
+  g.add(box(0.5, 0.74, 0.26, top, 0, 1.08, 0));
+  g.add(box(0.58, 0.42, 0.34, bot, 0, 0.6, 0)); // Rock
+  const armL = new THREE.Group(), armR = new THREE.Group(); armL.position.set(-0.37, 1.42, 0); armR.position.set(0.37, 1.42, 0);
+  armL.add(box(0.22, 0.72, 0.22, top, 0, -0.3, 0)); armR.add(box(0.22, 0.72, 0.22, top, 0, -0.3, 0));
+  armL.add(box(0.21, 0.14, 0.21, skin, 0, -0.62, 0)); armR.add(box(0.21, 0.14, 0.21, skin, 0, -0.62, 0));
+  g.add(armL, armR);
+  const head = new THREE.Group(); head.position.set(0, 1.45, 0); g.add(head);
+  const hm = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), [skin, skin, hair, skin, M(face), hair]); hm.position.y = 0.25; hm.castShadow = true; head.add(hm);
+  head.add(box(0.54, 0.14, 0.54, hair, 0, 0.47, 0)); head.add(box(0.54, 0.6, 0.12, hair, 0, 0.15, -0.22)); // Haare hinten lang
+  g.userData = { legL, legR, armL, armR, head }; g.scale.setScalar(o.scale || 0.95); return g;
+}
+const grete = humanoid({ skin: 0xe2b393, hair: 0xa8743a, top: 0x3d5a8a, bottom: 0x2f4670, eye: '#3a6a3a', scale: 0.92 });
+room.add(grete);
+
 // --- Gregor als Käfer (stehend auf dem Bett, klar lesbare Silhouette) ---
 const beetle = new THREE.Group();
 {
@@ -313,7 +340,7 @@ composer.setPixelRatio(RES); composer.setSize(W, H);
 
 // ---------- Timeline ----------
 const words = await (await fetch('words.json')).json();
-const DUR = 10.0;
+const DUR = 4.0;
 // Shots: [start, end, id]
 const SHOTS = [
   [0.00, 1.22, 'hero'],      // ikonisches Bild: Käfer im Bett (wird Loop-Ende), endet mit Whip-Pan
@@ -364,17 +391,29 @@ function renderAt(t, tShot) {
   const { bx, bz } = room.userData.bed, { nx, nz } = room.userData.clock;
   window.drawClock(30 + t * 0.05, (Math.floor(t) * 6) % 60 + 12);
   animateRoom(t);
+  grete.visible = scene === room || true;
+  { const G = grete.userData;
+    if (shot[2] === 'wide') { // läuft Richtung Tür
+      const w = (t - WHIP1); grete.position.set(-0.1 + w * 1.3, 0, -1.9 + w * 1.6); grete.rotation.y = Math.atan2(1.3, 1.6);
+      const sw = Math.sin(t * 9) * 0.6; G.legL.rotation.x = sw; G.legR.rotation.x = -sw; G.armL.rotation.x = -sw * 0.8; G.armR.rotation.x = sw * 0.8; G.head.rotation.y = 0;
+    } else { // steht, schaut erschrocken zum Käfer
+      grete.position.set(-0.2, 0, -1.95); grete.rotation.y = -0.2;
+      G.legL.rotation.x = G.legR.rotation.x = 0; G.armL.rotation.x = -0.15 + Math.sin(t * 2) * 0.03; G.armR.rotation.x = -1.1 + Math.sin(t * 2.4) * 0.05; G.armR.rotation.z = 0.15;
+      G.head.rotation.y = -0.55 + Math.sin(t * 1.5) * 0.04; G.head.rotation.x = 0.05; }
+  }
 
   if (shot[2] === 'hero' || shot[2] === 'loop') {
     // eine durchgehende Kamerafahrt: Loop-Teil (-0.58s..0) + Hero-Teil (0..2.22s)
     const tt = shot[2] === 'hero' ? t : -(DUR - t); // -0.58 .. 0
-    const [p, tg] = heroPose(tt);
+    // Two-Shot auf Augenhöhe (wie Referenz): Käfer links, Grete rechts, langsamer Push-in
+    const k = t / 1.4;
+    const p = V(-0.85, lerp(1.62, 1.58, k), lerp(2.1, 1.75, k)), tg = V(-0.95, 1.05, -2.6);
     if (shot[2] === 'hero' && t > WHIP0) {
-      // Whip-Pan: Kamera reißt beschleunigend nach hinten oben weg und kippt nach unten
+      // Whip-Pan: Kamera reißt beschleunigend nach hinten oben weg und schwenkt zur Seite
       const w = Math.pow(Math.min(1, (t - WHIP0) / (WHIP1 - WHIP0)), 3);
-      p.add(V(1.4 * w, 1.6 * w, 2.0 * w)); tg.add(V(-3.2 * w, -1.2 * w, 1.6 * w));
+      p.add(V(1.2 * w, 1.9 * w, 2.0 * w)); tg.add(V(-3.0 * w, -1.4 * w, 1.4 * w));
     }
-    camSet(p, tg); camera.fov = 44; focus = 3.6; ap = 0.002;
+    camSet(p, tg); camera.fov = 56; focus = 4.2; ap = 0.0008;
   } else if (shot[2] === 'wide') {
     // Totale aus der Zimmerecke unter der Decke; startet mit Restschwung des Whip-Pans und bremst aus
     const d = Math.exp(-(t - WHIP1) * 7), drift = (t - WHIP1) * 0.1;
@@ -407,8 +446,8 @@ function renderAt(t, tShot) {
   camera.updateProjectionMatrix();
   rp.scene = scene; bokeh.scene = scene;
   bokeh.uniforms.focus.value = focus; bokeh.uniforms.aperture.value = ap; bokeh.enabled = ap > 0;
-  renderer.toneMappingExposure = scene === prague ? 1.25 : (window.__shot === 'clock' ? 0.95 : 1.35);
-  bloom.strength = scene === prague ? 0.2 : 0.3;
+  renderer.toneMappingExposure = scene === prague ? 1.35 : 1.6;
+  bloom.strength = 0.12;
   composer.render();
 }
 
@@ -426,8 +465,8 @@ function drawUI(t, id) {
   else capEl.textContent = '';
   const { bx, bz } = room.userData.bed;
   let tags = '', chat = '', extra = '';
-  if (id === 'wide') tags = tag(V(bx + 0.1, 1.95, bz + 0.05), 'Gregor Samsa', '#ffd23f');
-  if (id === 'hero' || id === 'loop') tags = tag(V(bx + 0.1, 2.05, bz + 0.05), 'Gregor Samsa', '#ffd23f');
+  if (id === 'wide') tags = tag(V(bx + 0.1, 1.95, bz + 0.05), 'Gregor Samsa', '#ffd23f') + tag(grete.localToWorld(V(0, 2.2, 0)), 'Grete Samsa', '#55ffff');
+  if (id === 'hero' || id === 'loop') tags = tag(V(bx + 0.1, 2.0, bz + 0.05), 'Gregor Samsa', '#ffd23f') + tag(grete.localToWorld(V(0, 2.2, 0)), 'Grete Samsa', '#55ffff');
   if (id === 'human') tags = tag(V(bx, 1.62, bz - 0.95), 'Gregor Samsa', '#ffd23f');
   if (id === 'top') tags = tag(V(bx + 0.1, 2.0, bz + 0.1), 'Gregor Samsa', '#ffd23f');
   if (id === 'prag' && t >= 2.30) chat = `<div style="opacity:${fadeIn(t, 2.30)}"><span style="color:#ffd23f">[Info]</span> Prag, 1912</div>`;
