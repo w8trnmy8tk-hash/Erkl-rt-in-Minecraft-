@@ -88,7 +88,7 @@ room.fog = new THREE.Fog(0x1b2030, 12, 26);
   room.add(box(1.8, 1.0, 0.3, wall, 1.3, 3.7, -4.6));
   room.add(box(0.3, WH, 9.4, wall, -4.15, WH / 2, 0));
   room.add(box(0.3, WH, 9.4, wall, 4.15, WH / 2, 0));
-  room.add(box(8.6, 0.3, 9.4, dw, 0, WH + 0.15, 0)); // Decke
+  const ceil = box(8.6, 0.3, 9.4, dw, 0, WH + 0.15, 0); ceil.layers.set(1); room.add(ceil); // Decke: nur Schatten, für Kamera unsichtbar
   // Holzleiste unten
   room.add(box(7.99, 0.5, 0.05, dw, 0, 0.25, -4.43)); room.add(box(0.05, 0.5, 8.9, dw, -3.98, 0.25, 0)); room.add(box(0.05, 0.5, 8.9, dw, 3.98, 0.25, 0));
   // Fensterkreuz + Glas
@@ -104,7 +104,7 @@ room.fog = new THREE.Fog(0x1b2030, 12, 26);
   // Kaltes Morgenlicht durchs Fenster
   const sun = new THREE.DirectionalLight(0xb4c8ff, 5.0); sun.position.set(2.6, 6.5, -11); sun.target.position.set(0.2, 0, 0.5);
   sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); sun.shadow.radius = 6; sun.shadow.bias = -0.0004;
-  Object.assign(sun.shadow.camera, { left: -7, right: 7, top: 7, bottom: -7, near: 1, far: 30 }); room.add(sun, sun.target);
+  Object.assign(sun.shadow.camera, { left: -7, right: 7, top: 7, bottom: -7, near: 1, far: 30 }); sun.shadow.camera.layers.enable(1); room.add(sun, sun.target);
   room.add(new THREE.HemisphereLight(0x8fa0cc, 0x3a2618, 1.1));
   const fill = new THREE.DirectionalLight(0xdfe4ff, 1.3); fill.position.set(3, 3.5, 4); fill.target.position.set(-1.6, 1, -2.8); room.add(fill, fill.target);
   const rim = new THREE.PointLight(0xffa860, 4, 4, 1.5); rim.position.set(-0.4, 1.9, -1.4); room.add(rim);
@@ -343,8 +343,7 @@ const words = await (await fetch('words.json')).json();
 const DUR = 4.0;
 // Shots: [start, end, id]
 const SHOTS = [
-  [0.00, 1.22, 'hero'],      // ikonisches Bild: Käfer im Bett (wird Loop-Ende), endet mit Whip-Pan
-  [1.22, 2.22, 'wide'],      // harter Schnitt auf "in": Totale von oben, Restbewegung bremst aus
+  [0.00, 2.22, 'hero'],      // Two-Shot -> durchgehende Kranfahrt nach hinten/oben/links (kein Schnitt) -> hohe Totale
   [2.22, 4.10, 'prag'],      // Establishing
   [4.10, 5.80, 'human'],     // Gregor wacht auf
   [5.80, 7.03, 'bug'],       // ... als riesiger Käfer (Close-up + Poof)
@@ -365,12 +364,12 @@ function animateRoom(t) {
   b.position.y = Math.sin(t * 2.2) * 0.012; b.rotation.y = Math.sin(t * 1.3) * 0.03;
 }
 
-const WHIP0 = 0.95, WHIP1 = 1.22;
+const WHIP0 = 0.85, WHIP1 = 1.30; // Kranfahrt startet auf "erklärt"
 function heroPose(tt) { const k = (tt + LOOP_LEN) / (HERO_LEN + LOOP_LEN);
   return [V(lerp(1.5, 0.9, k), lerp(2.2, 1.95, k), lerp(2.6, 1.4, k)), V(lerp(-1.25, -1.4, k), 0.82, lerp(-2.6, -2.75, k))]; }
 const mbCanvas = document.createElement('canvas'); mbCanvas.style.cssText = 'position:absolute;inset:0;width:1080px;height:1920px';
 canvas.after(mbCanvas); const mbCtx = mbCanvas.getContext('2d');
-function needsBlur(t) { return (t > WHIP0 + 0.03 && t < WHIP1) || (t >= WHIP1 && t < WHIP1 + 0.2); }
+function needsBlur(t) { return false; }
 
 function render(frame) {
   const t = frame / FPS;
@@ -393,8 +392,8 @@ function renderAt(t, tShot) {
   animateRoom(t);
   grete.visible = scene === room || true;
   { const G = grete.userData;
-    if (shot[2] === 'wide') { // läuft Richtung Tür
-      const w = (t - WHIP1); grete.position.set(-0.1 + w * 1.3, 0, -1.9 + w * 1.6); grete.rotation.y = Math.atan2(1.3, 1.6);
+    if (shot[2] === 'hero' && t > 0.9) { // läuft Richtung Tür
+      const w = (t - 0.9) * 0.75; grete.position.set(-0.2 - w * 0.35, 0, -1.95 + w * 1.6); grete.rotation.y = Math.atan2(-0.35, 1.6);
       const sw = Math.sin(t * 9) * 0.6; G.legL.rotation.x = sw; G.legR.rotation.x = -sw; G.armL.rotation.x = -sw * 0.8; G.armR.rotation.x = sw * 0.8; G.head.rotation.y = 0;
     } else { // steht, schaut erschrocken zum Käfer
       grete.position.set(-0.2, 0, -1.95); grete.rotation.y = -0.2;
@@ -405,15 +404,17 @@ function renderAt(t, tShot) {
   if (shot[2] === 'hero' || shot[2] === 'loop') {
     // eine durchgehende Kamerafahrt: Loop-Teil (-0.58s..0) + Hero-Teil (0..2.22s)
     const tt = shot[2] === 'hero' ? t : -(DUR - t); // -0.58 .. 0
-    // Two-Shot auf Augenhöhe (wie Referenz): Käfer links, Grete rechts, langsamer Push-in
+    // Two-Shot auf Augenhöhe mit langsamem Push-in ...
     const k = t / 1.4;
-    const p = V(-0.85, lerp(1.62, 1.58, k), lerp(2.1, 1.75, k)), tg = V(-0.95, 1.05, -2.6);
-    if (shot[2] === 'hero' && t > WHIP0) {
-      // Whip-Pan: Kamera reißt beschleunigend nach hinten oben weg und schwenkt zur Seite
-      const w = Math.pow(Math.min(1, (t - WHIP0) / (WHIP1 - WHIP0)), 3);
-      p.add(V(1.2 * w, 1.9 * w, 2.0 * w)); tg.add(V(-3.0 * w, -1.4 * w, 1.4 * w));
-    }
-    camSet(p, tg); camera.fov = 56; focus = 4.2; ap = 0.0008;
+    const p0 = V(-0.85, lerp(1.62, 1.58, k), lerp(2.1, 1.75, k)), t0 = V(-0.95, 1.05, -2.6);
+    // ... dann EINE durchgehende Kranfahrt nach hinten, oben, links (weich, ohne Schnitt, ohne Blur)
+    const m = Math.min(1, Math.max(0, (t - WHIP0) / (WHIP1 - WHIP0)));
+    const e = m * m * m * (m * (m * 6 - 15) + 10); // smootherstep
+    const drift = Math.max(0, t - WHIP1) * 0.12;   // danach leichtes Weitertreiben
+    const p1 = V(-2.6 + drift, 6.0 + drift * 0.3, 4.6 - drift * 0.6), t1 = V(-1.0 + drift * 0.5, 0.3, -2.3);
+    const p = p0.clone().lerp(p1, e), tg = t0.clone().lerp(t1, e);
+    p.y += Math.sin(e * Math.PI) * 0.4; // leichter Bogen nach oben
+    camera.fov = lerp(56, 50, e); camSet(p, tg); focus = lerp(4.2, 7, e); ap = 0.0008;
   } else if (shot[2] === 'wide') {
     // Totale aus der Zimmerecke unter der Decke; startet mit Restschwung des Whip-Pans und bremst aus
     const d = Math.exp(-(t - WHIP1) * 7), drift = (t - WHIP1) * 0.1;
