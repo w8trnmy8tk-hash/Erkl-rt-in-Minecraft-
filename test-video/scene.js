@@ -316,7 +316,8 @@ const words = await (await fetch('words.json')).json();
 const DUR = 10.0;
 // Shots: [start, end, id]
 const SHOTS = [
-  [0.00, 2.22, 'hero'],      // ikonisches Bild: Käfer im Bett (wird Loop-Ende)
+  [0.00, 1.22, 'hero'],      // ikonisches Bild: Käfer im Bett (wird Loop-Ende), endet mit Whip-Pan
+  [1.22, 2.22, 'wide'],      // harter Schnitt auf "in": Totale von oben, Restbewegung bremst aus
   [2.22, 4.10, 'prag'],      // Establishing
   [4.10, 5.80, 'human'],     // Gregor wacht auf
   [5.80, 7.03, 'bug'],       // ... als riesiger Käfer (Close-up + Poof)
@@ -337,9 +338,26 @@ function animateRoom(t) {
   b.position.y = Math.sin(t * 2.2) * 0.012; b.rotation.y = Math.sin(t * 1.3) * 0.03;
 }
 
+const WHIP0 = 0.95, WHIP1 = 1.22;
+function heroPose(tt) { const k = (tt + LOOP_LEN) / (HERO_LEN + LOOP_LEN);
+  return [V(lerp(1.5, 0.9, k), lerp(2.2, 1.95, k), lerp(2.6, 1.4, k)), V(lerp(-1.25, -1.4, k), 0.82, lerp(-2.6, -2.75, k))]; }
+const mbCanvas = document.createElement('canvas'); mbCanvas.style.cssText = 'position:absolute;inset:0;width:1080px;height:1920px';
+canvas.after(mbCanvas); const mbCtx = mbCanvas.getContext('2d');
+function needsBlur(t) { return (t > WHIP0 + 0.03 && t < WHIP1) || (t >= WHIP1 && t < WHIP1 + 0.2); }
+
 function render(frame) {
   const t = frame / FPS;
-  const shot = SHOTS.find(s => t >= s[0] && t < s[1]) || SHOTS[SHOTS.length - 1];
+  if (needsBlur(t)) {
+    // Bewegungsunschärfe: 12 Unterbilder über das ganze Frame-Intervall mitteln (360°-Shutter)
+    const N = 12; mbCanvas.width = canvas.width; mbCanvas.height = canvas.height;
+    for (let k = 0; k < N; k++) { renderAt(t + (k / N - 0.5) / FPS, t); mbCtx.globalAlpha = 1 / (k + 1); mbCtx.drawImage(canvas, 0, 0); }
+    mbCanvas.style.display = 'block';
+  } else { renderAt(t, t); mbCanvas.style.display = 'none'; }
+  drawUI(t, window.__shot);
+}
+
+function renderAt(t, tShot) {
+  const shot = SHOTS.find(s => tShot >= s[0] && tShot < s[1]) || SHOTS[SHOTS.length - 1];
   const u = (t - shot[0]) / (shot[1] - shot[0]); window.__shot = shot[2];
   let scene = room, focus = 3, ap = 0.0;
   beetle.visible = true; gregorHuman.visible = false; poof.visible = false;
@@ -350,9 +368,18 @@ function render(frame) {
   if (shot[2] === 'hero' || shot[2] === 'loop') {
     // eine durchgehende Kamerafahrt: Loop-Teil (-0.58s..0) + Hero-Teil (0..2.22s)
     const tt = shot[2] === 'hero' ? t : -(DUR - t); // -0.58 .. 0
-    const k = (tt + LOOP_LEN) / (HERO_LEN + LOOP_LEN); // 0..1
-    camSet(V(lerp(1.5, 0.9, k), lerp(2.2, 1.95, k), lerp(2.6, 1.4, k)), V(lerp(-1.25, -1.4, k), 0.82, lerp(-2.6, -2.75, k)));
-    camera.fov = 44; focus = 3.6; ap = 0.002;
+    const [p, tg] = heroPose(tt);
+    if (shot[2] === 'hero' && t > WHIP0) {
+      // Whip-Pan: Kamera reißt beschleunigend nach hinten oben weg und kippt nach unten
+      const w = Math.pow(Math.min(1, (t - WHIP0) / (WHIP1 - WHIP0)), 3);
+      p.add(V(1.4 * w, 1.6 * w, 2.0 * w)); tg.add(V(-3.2 * w, -1.2 * w, 1.6 * w));
+    }
+    camSet(p, tg); camera.fov = 44; focus = 3.6; ap = 0.002;
+  } else if (shot[2] === 'wide') {
+    // Totale aus der Zimmerecke unter der Decke; startet mit Restschwung des Whip-Pans und bremst aus
+    const d = Math.exp(-(t - WHIP1) * 7), drift = (t - WHIP1) * 0.1;
+    camSet(V(-3.5 + 0.6 * d + drift, 3.9, 4.1 - 0.8 * d - drift), V(bx + 0.4 + 1.4 * d, 0.6, bz - 0.3 - 0.5 * d));
+    camera.fov = 50; focus = 7; ap = 0.001;
   } else if (shot[2] === 'prag') {
     scene = prague; camera.fov = 45;
     pathCam(V(-6, 19, 30), V(-4.5, 18, 21), V(3, 17, -44), V(4, 18, -44), u);
@@ -383,7 +410,6 @@ function render(frame) {
   renderer.toneMappingExposure = scene === prague ? 1.25 : (window.__shot === 'clock' ? 0.95 : 1.35);
   bloom.strength = scene === prague ? 0.2 : 0.3;
   composer.render();
-  drawUI(t, shot[2]);
 }
 
 // ---------- UI-Layer ----------
@@ -400,6 +426,7 @@ function drawUI(t, id) {
   else capEl.textContent = '';
   const { bx, bz } = room.userData.bed;
   let tags = '', chat = '', extra = '';
+  if (id === 'wide') tags = tag(V(bx + 0.1, 1.95, bz + 0.05), 'Gregor Samsa', '#ffd23f');
   if (id === 'hero' || id === 'loop') tags = tag(V(bx + 0.1, 2.05, bz + 0.05), 'Gregor Samsa', '#ffd23f');
   if (id === 'human') tags = tag(V(bx, 1.62, bz - 0.95), 'Gregor Samsa', '#ffd23f');
   if (id === 'top') tags = tag(V(bx + 0.1, 2.0, bz + 0.1), 'Gregor Samsa', '#ffd23f');
