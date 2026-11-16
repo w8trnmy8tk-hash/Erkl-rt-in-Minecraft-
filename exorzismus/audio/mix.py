@@ -11,5 +11,5 @@ for i in [56,90,158,194,212]: add(pop,wt(i),0.18)
 add(ch,wt(240)-0.05,0.12)
 out=out[:int(round(DUR*SR))]
 st=np.clip(np.stack([out,out],1)*32767,-32768,32767).astype(np.int16)
-subprocess.run(['ffmpeg','-v','error','-y','-f','s16le','-ar',str(SR),'-ac','2','-i','-','-af','loudnorm=I=-14:TP=-1.5:LRA=11','-ar',str(SR),'audio/mix_raw.wav'],input=st.tobytes())
+subprocess.run(['ffmpeg','-v','error','-y','-f','s16le','-ar',str(SR),'-ac','2','-i','-','-af','loudnorm=I=-14:TP=-1.5:LRA=11,volume=0.9dB','-ar',str(SR),'audio/mix_raw.wav'],input=st.tobytes())
 print(DUR)
