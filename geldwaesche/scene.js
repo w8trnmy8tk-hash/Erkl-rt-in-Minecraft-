@@ -266,9 +266,9 @@ function bundle(x = 0, y = 0, z = 0, dirty = false, s = 1) { const g = new THREE
 function cashPile(n, w, d, seed, dirty = false) { const g = new THREE.Group(), r = rng(seed); let k = 0; for (let layer = 0; k < n; layer++) { const cw = Math.max(1, w - layer), cd = Math.max(1, d - layer); for (let i = 0; i < cw && k < n; i++) for (let j = 0; j < cd && k < n; j++) { const b = bundle((i - (cw - 1) / 2) * 0.36 + (r() - 0.5) * 0.04, layer * 0.09, (j - (cd - 1) / 2) * 0.19, dirty); b.rotation.y = (r() - 0.5) * 0.15; g.add(b); k++; } } return g; }
 function suitcase(open = true, dirty = false) { const g = new THREE.Group(); const lm = C(0x4a2a1a), mm = C(0xc8a040, { metal: 0.6, rough: 0.4 });
   g.add(box(0.95, 0.06, 0.62, lm, 0, 0.03, 0)); g.add(box(0.95, 0.2, 0.05, lm, 0, 0.12, 0.29)); g.add(box(0.95, 0.2, 0.05, lm, 0, 0.12, -0.29)); g.add(box(0.05, 0.2, 0.62, lm, -0.45, 0.12, 0)); g.add(box(0.05, 0.2, 0.62, lm, 0.45, 0.12, 0));
-  for (let i = 0; i < 2; i++) for (let j = 0; j < 3; j++) for (let l = 0; l < 2; l++) { const b = bundle(-0.22 + i * 0.44 - 0.0, 0.06 + l * 0.09, -0.19 + j * 0.19, dirty, 1.12); g.add(b); }
+  for (let i = 0; i < 2; i++) for (let j = 0; j < 3; j++) for (let l = 0; l < 3; l++) { const b = bundle(-0.22 + i * 0.44 - 0.0, 0.06 + l * 0.09, -0.19 + j * 0.19, dirty, 1.12); g.add(b); }
   const lid = new THREE.Group(); lid.position.set(0, 0.2, -0.31); g.add(lid); lid.add(box(0.95, 0.62, 0.05, lm, 0, 0.31, -0.0)); lid.add(box(0.85, 0.52, 0.02, C(0x7a1a1a), 0, 0.31, 0.035, { cast: false }));
-  lid.rotation.x = open ? -0.35 : Math.PI / 2; g.add(box(0.2, 0.05, 0.05, mm, 0, 0.22, 0.32, { cast: false })); g.userData.lid = lid; return g; }
+  lid.rotation.x = open ? -0.95 : Math.PI / 2; g.add(box(0.2, 0.05, 0.05, mm, 0, 0.22, 0.32, { cast: false })); g.userData.lid = lid; return g; }
 function moneyBag(ch) { const g = new THREE.Group(); g.position.set(0, -0.72, 0.05); g.add(box(0.36, 0.42, 0.3, C(0xb89a6a), 0, -0.2, 0)); g.add(box(0.14, 0.1, 0.12, C(0x8a6a3a), 0, 0.04, 0)); ch.userData.armR.add(g); return g; }
 function fanCash(ch) { const g = new THREE.Group(); g.position.set(0, -0.72, 0.1); for (let i = 0; i < 5; i++) { const b = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.16), new THREE.MeshStandardMaterial({ map: billTex(0x5aa04a), side: THREE.DoubleSide, roughness: 0.9 })); b.position.set(0, 0.08, 0.06 + i * 0.004); b.rotation.set(-1.2, 0, (i - 2) * 0.28); b.translateY(0.06); g.add(b); } ch.userData.armR.add(g); return g; }
 const ledger = () => { const g = new THREE.Group(); g.add(box(0.34, 0.06, 0.42, C(0x2a3a5a), 0, 0, 0.14)); g.add(box(0.32, 0.065, 0.4, C(0xeee8d8), 0.01, 0, 0.14, { cast: false })); g.rotation.x = -1.1; return g; };
@@ -285,7 +285,7 @@ function sportsCar(scene, x, z, ry = 0) { const g = new THREE.Group(); g.positio
   for (const [wx, wz] of [[-1.35, 0.9], [1.35, 0.9], [-1.35, -0.9], [1.35, -0.9]]) { g.add(box(0.7, 0.7, 0.28, C(0x111111), wx, 0.35, wz)); g.add(box(0.36, 0.36, 0.3, C(0xc8c8c8, { metal: 0.7 }), wx, 0.35, wz, { cast: false })); }
   for (const wz of [-0.65, 0.65]) g.add(box(0.06, 0.14, 0.4, new THREE.MeshBasicMaterial({ color: 0xffffff }), 2.11, 0.72, wz, { cast: false })); scene.add(g); return g; }
 function washer(x, y, z) { const g = new THREE.Group(); g.position.set(x, y, z); g.add(box(0.86, 0.96, 0.8, C(0xe8e8e2), 0, 0.48, 0)); g.add(box(0.86, 0.12, 0.8, C(0xc8c8c4), 0, 0.9, 0, { cast: false }));
-  g.add(box(0.56, 0.56, 0.04, C(0x3a3a40, { metal: 0.5, rough: 0.4 }), 0, 0.46, 0.41, { cast: false })); const drum = new THREE.Group(); drum.position.set(0, 0.46, 0.425); g.add(drum);
+  g.add(box(0.56, 0.56, 0.04, C(0x3a3a40, { metal: 0.5, rough: 0.4 }), 0, 0.46, 0.41, { cast: false })); const drum = new THREE.Group(); drum.position.set(0, 0.46, 0.445); g.add(drum);
   drum.add(box(0.44, 0.44, 0.01, new THREE.MeshStandardMaterial({ color: 0x9ac8d8, roughness: 0.1, metalness: 0.2, transparent: true, opacity: 0.35 }), 0, 0, 0.012, { cast: false }));
   const inner = new THREE.Group(); drum.add(inner); for (let i = 0; i < 6; i++) { const b = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.1), BILL); b.position.set(Math.cos(i) * 0.1, Math.sin(i * 2.3) * 0.11, 0); b.rotation.z = i; inner.add(b); }
   g.userData.inner = inner; return g; }
@@ -340,7 +340,7 @@ const chicago = new THREE.Scene();
   const neon = textPlane(5.2, 1.1, 1024, (c, w, h) => { c.fillStyle = '#1a0e14'; c.fillRect(0, 0, w, h); c.strokeStyle = '#ff3a5a'; c.lineWidth = 10; c.strokeRect(14, 14, w - 28, h - 28); c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = '800 128px Mont';
     c.fillStyle = '#ff4a6a'; c.fillText('WASCHSALON', w / 2, h / 2 + 6); c.fillStyle = '#ffd0d8'; c.font = '800 118px Mont'; c.fillText('WASCHSALON', w / 2, h / 2 + 6); });
   neon.position.set(0, 4.0, 4.12); ls.add(neon); ls.add(box(5.4, 1.3, 0.12, C(0x1a1a1e), 0, 4.0, 4.04));
-  lamp(chicago, -3.9, 0.4); lamp(chicago, 5.0, 0.4, false); lamp(chicago, -12, 0.4, false); lamp(chicago, 12, 0.4, false); lamp(chicago, 22, 0.4, false); lamp(chicago, -22, 0.4, false);
+  lamp(chicago, -3.9, 0.4); lamp(chicago, 5.0, 0.4); lamp(chicago, -12, 0.4); lamp(chicago, 15, 0.4); lamp(chicago, 22, 0.4, false); lamp(chicago, -22, 0.4, false);
   const car = oldCar(chicago, 4.6, 3.4, Math.PI); const car2 = oldCar(chicago, -18, 7.5, 0, 0x2a2a3a);
   const key = new THREE.PointLight(0xffd0a0, 10, 14, 1.2); key.position.set(0.4, 2.8, 4.5); chicago.add(key);
   const neonL = new THREE.PointLight(0xff5a7a, 4, 6, 1.5); neonL.position.set(0, 4.0, -1.6); chicago.add(neonL);
@@ -356,7 +356,7 @@ const chicago = new THREE.Scene();
   const carryB = [0, 1].map(() => barrel(chicago, 0, 0, 0, 0.8));
   const capone = humanoid(CAPONE), book = humanoid(BOOK), cop = humanoid(COPOLD), gang = humanoid({ ...CAPONE, top: 0x4a3a2a, bottom: 0x4a3a2a, tie: 0x2a2a2a, smile: false, seed: 60 }), h1 = humanoid({ ...BOOK, top: 0x6a6a5a, bottom: 0x3a3a34, hair: 0x2a1a14, tie: undefined, seed: 61 }), h2 = humanoid({ ...BOOK, top: 0x5a4a3a, bottom: 0x3a3a34, hair: 0x6a4422, tie: undefined, hat: 'cap', seed: 62 });
   fedora(capone, 0x5a5a62, 0x1a1a1e); fedora(gang, 0x3a3226); glasses(book); const cig = cigar(capone); const fan = fanCash(capone); const led = inHand(book, ledger()); const bag = moneyBag(gang);
-  const case1 = suitcase(true); case1.position.set(0.05, 0.16, 1.15); case1.rotation.y = 0.12; chicago.add(case1);
+  const case1 = suitcase(true); case1.position.set(0.05, 0.16, 1.85); case1.rotation.y = 0.12; chicago.add(case1); const pileH = cashPile(9, 3, 2, 4270); pileH.position.set(1.15, 0.16, 2.55); pileH.rotation.y = -0.4; chicago.add(pileH); const pileH2 = cashPile(8, 3, 2, 4271); pileH2.position.set(-1.1, 0.16, 2.75); pileH2.rotation.y = 0.5; chicago.add(pileH2);
   chicago.add(capone, book, cop, gang, h1, h2);
   chicago.userData = { capone, book, cop, gang, h1, h2, carryB, fan, led, bag, case1, cig };
 }
@@ -376,7 +376,7 @@ const RX = { office: 0, court: 30, cell: 60, wash: 90, bank: 120, ermit: 150, no
   // Büro Capone
   const of = g('office'); room(of, 9, 8, 3.6, greenWall, parquet); of.add(box(9, 1.1, 0.12, wood, 0, 0.55, -3.8));
   of.add(box(2.6, 0.12, 1.2, C(0x4a2a1a), 0, 0.85, -1.2)); of.add(box(2.4, 0.8, 1.0, C(0x3a2214), 0, 0.4, -1.2)); of.add(box(0.7, 1.4, 0.7, C(0x6a1a1a), 0, 0.7, -2.7)); of.add(box(0.7, 0.2, 0.7, C(0x6a1a1a), 0, 0.5, -2.4));
-  const pileO = cashPile(46, 4, 3, 4310, true); pileO.position.set(-0.55, 0.91, -1.2); of.add(pileO); const pileO2 = cashPile(24, 3, 2, 4311, true); pileO2.position.set(0.65, 0.91, -1.05); of.add(pileO2);
+  const pileO = cashPile(20, 4, 3, 4310, true); pileO.position.set(-0.55, 0.91, -1.2); of.add(pileO); const pileO2 = cashPile(9, 3, 2, 4311, true); pileO2.position.set(0.65, 0.91, -1.05); of.add(pileO2);
   of.add(box(0.2, 0.5, 0.2, C(0x2a5a3a), 1.05, 1.15, -1.55)); of.add(box(0.4, 0.2, 0.4, new THREE.MeshBasicMaterial({ color: 0xa8e8a0 }), 1.05, 1.45, -1.55, { cast: false }));
   of.add(box(1.6, 1.2, 0.1, M(T.windowDark), -2.6, 2.1, -3.82, { cast: false })); of.add(box(1.6, 1.2, 0.1, M(T.windowDark), 2.6, 2.1, -3.82, { cast: false }));
   of.add(box(1.2, 2.2, 0.6, wood, -3.8, 1.1, -3.2)); const safe = box(0.9, 1.0, 0.8, C(0x3a3a40, { metal: 0.6, rough: 0.4 }), 3.6, 0.5, -3.1); of.add(safe);
@@ -393,7 +393,7 @@ const RX = { office: 0, court: 30, cell: 60, wash: 90, bank: 120, ermit: 150, no
   wa.add(box(8, 0.06, 0.6, C(0x8a6a4a), 0, 1.05, -2.5));
   // Bank (modern)
   const ba = g('bank'); room(ba, 9, 8, 3.6, modernWall, modFloor); ba.add(box(5, 1.1, 0.8, C(0xd8dce2), 0, 0.55, -1.0)); ba.add(box(5.2, 0.08, 1.0, C(0x2a3a5a), 0, 1.14, -1.0)); ba.add(box(5, 0.9, 0.04, new THREE.MeshStandardMaterial({ color: 0xbfe0f0, transparent: true, opacity: 0.25, roughness: 0.05 }), 0, 1.63, -0.7, { cast: false }));
-  const bscr = box(0.6, 0.4, 0.05, C(0x111114), 0.6, 1.45, -1.25); ba.add(bscr); const bscrM = new THREE.MeshBasicMaterial({ color: 0x9ad0ff }); const bs = new THREE.Mesh(new THREE.PlaneGeometry(0.54, 0.34), bscrM); bs.position.set(0.6, 1.45, -1.222); bs.rotation.y = Math.PI; ba.add(bs);
+  const bscrM = new THREE.MeshBasicMaterial({ color: 0x9ad0ff }); const bscr = box(0.6, 0.4, 0.05, bscrM, 1.15, 1.45, -1.25); ba.add(bscr); const bs = new THREE.Mesh(new THREE.PlaneGeometry(0.54, 0.34), bscrM); bs.position.set(1.15, 1.45, -1.222); bs.rotation.y = Math.PI; ba.add(bs);
   const logo = textPlane(3.4, 0.7, 512, (c, w, h) => { c.fillStyle = '#2a3a5a'; c.fillRect(0, 0, w, h); c.fillStyle = '#ffffff'; c.font = '800 64px Mont'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('STADTSPARKASSE', w / 2, h / 2 + 3); }, false); logo.position.set(0, 2.7, -3.83); ba.add(logo);
   for (const x of [-3.6, 3.6]) { ba.add(box(0.5, 0.5, 0.5, C(0x7a5a3a), x, 0.25, -3.4)); ba.add(box(0.9, 1.4, 0.9, C(0x3a8a3a), x, 1.2, -3.4)); }
   // Ermittler-Büro
@@ -553,7 +553,7 @@ const mv = (u, a, b, ta, tb, fov) => cam(a.clone().lerp(b, u), ta.clone().lerp(t
 const HX = -0.7, HX2 = 0.75, HZ = 0.2;
 function heroCam(t) { // Preset hook-kranfahrt.json
   const k = t / 1.4;
-  const p0 = V(0.0, lerp(1.62, 1.58, k), lerp(5.0, 4.5, k)), t0 = V(0.0, 1.05, 0.2);
+  const p0 = V(0.0, lerp(1.62, 1.58, k), lerp(6.4, 5.85, k)), t0 = V(0.0, 1.42, 0.2);
   const e = smoother((t - WHIP0) / (WHIP1 - WHIP0)); const drift = Math.max(0, t - WHIP1) * 0.12;
   const p1 = V(-5.2 + drift * 1.2, 8.2 + drift * 0.7, 10.0 + drift * 1.2), t1 = V(0.6 + drift * 0.6, 1.6, -6.0);
   const p = p0.clone().lerp(p1, e), tg = t0.clone().lerp(t1, e); p.y += Math.sin(e * Math.PI) * 0.6;
@@ -610,31 +610,31 @@ function render(frame) {
       mv(u, V(1.3, 1.95, 3.2), V(1.0, 1.85, 2.4), V(0, 1.25, -1.6), V(0, 1.25, -1.6), 46); tag(capone, 'Al Capone', BAD); toast(wt(24), 'Fortschritt erzielt!', 'Millionär', 'cash'); }
     if (sh.id === 'dirty') { put(capone, 0.1, 0, -2.05, 0); pose(capone, 'count', t); mv(u, V(-0.1, 1.55, 0.7), V(-0.25, 1.45, 0.15), V(-0.45, 0.95, -1.25), V(-0.45, 0.95, -1.25), 48);
       tip(wt(36), 'cash', 'Schmutziges Geld', '#ff5555', [gray('Herkunft: Alkoholschmuggel'), red('Woher? Nicht erklärbar')]); }
-    if (sh.id === 'nobody' || sh.id === 'fail') { put(capone, -1.15, 0, 0.0, 0.75); put(tax, 1.3, 0, 0.45, -0.8); pose3(capone, sh.id === 'fail' ? 'idle' : 'cross', t); pose3(tax, 'idle', t, 1); tax.userData.armR.rotation.x = -1.2;
-      if (sh.id === 'nobody') { if (t >= wt(43)) { capone.userData.setFace({ sad: true }); capone.userData.head.rotation.x = 0.15; } mv(u, V(0.25, 1.85, 4.6), V(0.15, 1.8, 3.9), V(0, 1.3, 0), V(0, 1.3, 0), 46); tag(capone, 'Al Capone', BAD); tag(tax, 'Steuerbehörde', ALLY); say(wt(38), 'Steuerbehörde', ALLY, 'Woher kommt Ihr Geld?'); }
-      else { capone.userData.setFace({ sad: true }); capone.userData.head.rotation.x = 0.15; mv(u, V(-0.35, 1.8, 1.75), V(-0.45, 1.78, 1.45), V(-1.15, 1.62, 0), V(-1.15, 1.62, 0), 46); tag(capone, 'Al Capone', BAD); } }
-    if (sh.id === 'court') { put(judge, X + 0.0, 0.6, -3.75, 0.25); pose(judge, 'hammer', t); put(capone, X - 0.6, 0, 0.3, 2.45); pose3(capone, 'idle', t); capone.userData.setFace({ sad: true });
-      put(guard, X + 1.6, 0, 0.9, -2.6); pose3(guard, 'cross', t, 2);
-      mv(u, V(X + 3.9, 1.95, 2.0), V(X + 3.5, 1.9, 1.5), V(X - 0.4, 1.7, -1.6), V(X - 0.4, 1.7, -1.6), 48); tag(judge, 'Richter', WHITE); tag(capone, 'Al Capone', BAD); info(wt(48), 'Urteil, Oktober 1931'); }
+    if (sh.id === 'nobody' || sh.id === 'fail') { put(capone, -0.6, 0, 0.0, 0.6); put(tax, 0.65, 0, 0.45, -0.7); pose3(capone, sh.id === 'fail' ? 'idle' : 'cross', t); pose3(tax, 'idle', t, 1); tax.userData.armR.rotation.x = -1.2;
+      if (sh.id === 'nobody') { if (t >= wt(43)) { capone.userData.setFace({ sad: true }); capone.userData.head.rotation.x = 0.15; } mv(u, V(0.2, 1.85, 5.4), V(0.1, 1.8, 4.7), V(0, 1.35, 0), V(0, 1.35, 0), 46); tag(capone, 'Al Capone', BAD); tag(tax, 'Steuerbehörde', ALLY); say(wt(38), 'Steuerbehörde', ALLY, 'Woher kommt Ihr Geld?'); }
+      else { capone.userData.setFace({ sad: true }); capone.userData.head.rotation.x = 0.15; mv(u, V(0.1, 1.8, 1.85), V(0.0, 1.78, 1.5), V(-0.6, 1.62, 0), V(-0.6, 1.62, 0), 46); tag(capone, 'Al Capone', BAD); } }
+    if (sh.id === 'court') { put(judge, X - 0.6, 0.6, -3.75, 0.3); pose(judge, 'hammer', t); put(capone, X + 0.7, 0, -0.8, -0.7); pose3(capone, 'idle', t); capone.userData.setFace({ sad: true });
+      
+      mv(u, V(X + 0.2, 1.9, 4.4), V(X + 0.1, 1.85, 3.7), V(X, 1.6, -1.8), V(X, 1.6, -1.8), 48); tag(judge, 'Richter', WHITE); tag(capone, 'Al Capone', BAD); info(wt(48), 'Urteil, Oktober 1931'); }
     if (sh.id === 'cell') { put(capoC, X + 0.25, 0, 0.7, -0.1); pose3(capoC, 'sadidle', t); capoC.userData.setFace({ sad: true });
       mv(u, V(X + 0.9, 1.72, 4.2), V(X + 0.7, 1.7, 3.5), V(X + 0.2, 1.45, 0.6), V(X + 0.2, 1.45, 0.6), 46); tag(capoC, 'Al Capone', BAD);
       tip(wt(58), 'x', 'Steuerhinterziehung', '#ff5555', [gray('Urteil: 11 Jahre Haft'), gray('Nicht für Mord, nicht für Alkohol')]); }
-    if (sh.id === 'legend') { put(gangW, X + 1.6, 0, -1.2, -0.6); pose3(gangW, 'laugh', t); gangW.userData.armR.rotation.x = -1.1;
-      mv(u, V(X - 0.3, 1.35, 1.1), V(X - 0.5, 1.28, 0.55), V(X - 0.9, 0.7, -2.0), V(X - 0.9, 0.7, -2.0), 48); tag(gangW, 'Gangster', BAD);
+    if (sh.id === 'legend') { put(gangW, X + 0.75, 0, -1.0, -0.5); pose3(gangW, 'laugh', t); gangW.userData.armR.rotation.x = -1.1;
+      mv(u, V(X - 0.1, 1.4, 1.6), V(X - 0.3, 1.32, 1.0), V(X - 0.6, 0.75, -2.0), V(X - 0.6, 0.75, -2.0), 48); tag(gangW, 'Gangster', BAD);
       chat(wt(73), `<span style="color:#ffaa00">[Mythos]</span> ${gray('Waschsalon-Geschichte: nicht belegt')}`);
       tip(wt(79), 'wash', 'Geldwäsche', '#55ff55', [gray('Illegales Geld wird so'), green('scheinbar legal')]); }
-    if (sh.id === 'bank' || sh.id === 'report') { put(clerk, X + 0.45, 0, -1.8, -0.15); pose2(clerk, sh.id === 'report' ? 'type' : 'idle', t);
-      if (sh.id === 'bank') { put(max, X - 0.7, 0, 0.35, 2.25); pose3(max, 'give', t); I.caseB.visible = true; I.caseB.position.set(X - 0.55, 1.18, -0.9); I.caseB.rotation.y = 0.2; if (t >= wt(102)) clerk.userData.setFace({ angry: true });
-        mv(u, V(X + 2.9, 1.85, 2.9), V(X + 2.6, 1.8, 2.4), V(X - 0.1, 1.35, -0.8), V(X - 0.1, 1.35, -0.8), 48); tag(max, 'Max', BAD); tag(clerk, 'Bank', ALLY); say(wt(102), 'Bank', ALLY, 'Woher stammt das Geld?'); }
+    if (sh.id === 'bank' || sh.id === 'report') { put(clerk, X + 0.3, 0, -1.8, -0.15); pose2(clerk, sh.id === 'report' ? 'type' : 'idle', t);
+      if (sh.id === 'bank') { put(max, X - 0.45, 0, 0.0, 1.4); pose3(max, 'give', t); I.caseB.visible = true; I.caseB.position.set(X - 0.1, 1.18, -0.95); I.caseB.rotation.y = 0.2; if (t >= wt(102)) clerk.userData.setFace({ angry: true });
+        mv(u, V(X + 1.0, 1.9, 3.8), V(X + 0.9, 1.85, 3.2), V(X - 0.05, 1.35, -0.8), V(X - 0.05, 1.35, -0.8), 48); tag(max, 'Max', BAD); tag(clerk, 'Bank', ALLY); say(wt(102), 'Bank', ALLY, 'Woher stammt das Geld?'); }
       else { if (t >= wt(189)) I.bscrM.color.set(Math.floor(t * 4) % 2 ? 0xff3a3a : 0xff8a8a);
-        mv(u, V(X + 1.9, 1.75, 1.3), V(X + 1.7, 1.7, 0.8), V(X + 0.5, 1.35, -1.6), V(X + 0.5, 1.35, -1.6), 46); tag(clerk, 'Bank', ALLY); toast(wt(191), 'Verdachtsmeldung', 'an die Behörden', 'alert'); } }
+        mv(u, V(X + 0.9, 1.8, 2.0), V(X + 0.8, 1.75, 1.4), V(X + 0.6, 1.4, -1.6), V(X + 0.6, 1.4, -1.6), 46); tag(clerk, 'Bank', ALLY); toast(wt(191), 'Verdachtsmeldung', 'an die Behörden', 'alert'); } }
     if (sh.id === 'forms') { put(max, X, 0, -1.75, 0); pose3(max, 'idle', t); max.userData.setFace({ smile: true }); max.userData.armR.rotation.x = -0.8; max.userData.armL.rotation.x = -0.8;
-      mv(u, V(X + 0.4, 2.3, 2.6), V(X + 0.3, 2.2, 2.0), V(X, 0.95, -0.6), V(X, 0.95, -0.6), 46); tag(max, 'Max', BAD);
+      mv(u, V(X + 0.4, 2.15, 3.0), V(X + 0.3, 2.05, 2.4), V(X, 1.2, -0.9), V(X, 1.2, -0.9), 46); tag(max, 'Max', BAD);
       [[164, 'Gehalt', -0.75], [166, 'Kredit', 0], [168, 'Gewinn', 0.75]].forEach(([w, s, x]) => { if (t >= wt(w)) ui.tags.push([V(X + x, 1.05, -0.4), s, '#55ff55']); }); }
-    if (sh.id === 'legal') { put(notar, X - 0.1, 0, -1.75, 0.15); pose3(notar, 'idle', t, 1); put(max, X + 0.95, 0, 0.35, -1.95); pose3(max, 'write', t); max.userData.setFace({ smile: true });
-      mv(u, V(X - 2.3, 1.85, 2.7), V(X - 2.0, 1.8, 2.2), V(X + 0.3, 1.2, -0.6), V(X + 0.3, 1.2, -0.6), 46); tag(max, 'Max', BAD); tag(notar, 'Notar', ALLY); eff(wt(180), 'Kaufvertrag', 'alles legal', '#55ff55');
+    if (sh.id === 'legal') { put(notar, X - 0.1, 0, -1.75, 0.15); pose3(notar, 'idle', t, 1); put(max, X + 0.7, 0, 0.35, -1.95); pose3(max, 'write', t); max.userData.setFace({ smile: true });
+      mv(u, V(X - 1.3, 1.85, 3.4), V(X - 1.1, 1.8, 2.8), V(X + 0.25, 1.25, -0.7), V(X + 0.25, 1.25, -0.7), 46); tag(max, 'Max', BAD); tag(notar, 'Notar', ALLY); eff(wt(180), 'Kaufvertrag', 'alles legal', '#55ff55');
       tip(wt(185), 'n3', 'Schritt 3: Integration', '#ffff55', [gray('Geld steckt in Haus und Auto'), green('und wirkt legal')]); }
-    if (sh.id === 'follow') { put(inv, X - 1.3, 0, -2.3, 0.45); pose3(inv, 'point', t); inv.userData.armR.rotation.y = 0.9; put(inv2, X + 1.0, 0, -1.8, -0.5); pose3(inv2, 'idle', t, 1); inv2.userData.armR.rotation.x = -1.2;
+    if (sh.id === 'follow') { put(inv, X - 0.8, 0, -2.3, 0.45); pose3(inv, 'point', t); inv.userData.armR.rotation.y = 0.9; put(inv2, X + 0.75, 0, -1.8, -0.5); pose3(inv2, 'idle', t, 1); inv2.userData.armR.rotation.x = -1.2;
       mv(u, V(X + 0.5, 1.85, 3.2), V(X + 0.4, 1.8, 2.5), V(X - 0.1, 1.65, -2.4), V(X - 0.1, 1.65, -2.4), 48); tag(inv, 'Ermittlerin', ALLY); tag(inv2, 'Ermittler', ALLY); }
     if (sh.id === 'fraction') { I.foundGlow.visible = t >= wt(231); mv(u, V(X - 1.0, 6.2, 9.6), V(X - 0.6, 5.6, 8.4), V(X, 1.0, -0.6), V(X + 0.4, 0.9, -0.4), 46);
       if (t >= wt(231)) ui.tags.push([V(X + 2.6, 0.7, 2.0), 'entdeckt', BAD]); info(wt(231), 'Sichergestellt: unter 1 %'); }
@@ -653,7 +653,7 @@ function render(frame) {
         tip(wt(120), 'n1', 'Schritt 1: Platzierung', '#ffff55', [gray('Bargeld kommt aufs Konto'), gray('in kleinen Beträgen')]); } }
     if (sh.id === 'back') { put(maxC, -0.4, 0.14, 1.0, 0.25); pose3(maxC, 'cheer', t); maxC.userData.setFace({ smile: true });
       mv(u, V(1.5, 1.85, 5.0), V(1.3, 1.8, 4.3), V(-0.4, 1.4, 1.0), V(-0.4, 1.4, 1.0), 46); tag(maxC, 'Max', BAD); eff(wt(162), 'Sauberes Geld', 'scheinbar legal', '#55ff55'); }
-    if (sh.id === 'villa' || sh.id === 'integ') { put(maxC, 40.6, 0, 2.7, -0.75); pose3(maxC, 'pose', t); maxC.userData.setFace({ smile: true });
+    if (sh.id === 'villa' || sh.id === 'integ') { put(maxC, 37.6, 0, 4.2, -0.64); pose3(maxC, 'pose', t); maxC.userData.setFace({ smile: true });
       if (sh.id === 'villa') { mv(u, V(34, 2.2, 9.2), V(34.6, 2.1, 8.3), V(40.2, 1.5, -0.8), V(40.2, 1.5, -0.8), 48); tag(maxC, 'Max', BAD); }
       else { mv(u, V(30, 11, 17), V(31, 10.2, 15.4), V(42, 1.5, -3), V(42, 1.5, -3), 46); tip(wt(185), 'n3', 'Schritt 3: Integration', '#ffff55', [gray('Geld steckt in Haus und Auto'), green('und wirkt legal')]); } }
     if (sh.id === 'sudden') { put(inv, 35.8, 0, 5.0, 0.2); pose3(inv, 'idle', t); inv.userData.armR.rotation.x = -1.2; inv.userData.head.rotation.y = 0.5; put(maxC, 42.8, 0, -3.2, -0.3); pose3(maxC, 'idle', t, 2);
