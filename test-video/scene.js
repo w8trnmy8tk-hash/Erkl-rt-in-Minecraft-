@@ -411,7 +411,7 @@ function renderAt(t, tShot) {
     const m = Math.min(1, Math.max(0, (t - WHIP0) / (WHIP1 - WHIP0)));
     const e = m * m * m * (m * (m * 6 - 15) + 10); // smootherstep
     const drift = Math.max(0, t - WHIP1) * 0.12;   // danach leichtes Weitertreiben
-    const p1 = V(-2.0 + drift * 0.8, 10.0 + drift * 0.4, 6.5 + drift * 0.6), t1 = V(-0.8 + drift * 0.4, 0.2, -2.7);
+    const p1 = V(-3.75, 10.0 + drift * 0.4, 6.0 + drift * 0.7), t1 = V(-0.2 + drift * 0.5, 0.2, -2.6);
     const p = p0.clone().lerp(p1, e), tg = t0.clone().lerp(t1, e);
     p.y += Math.sin(e * Math.PI) * 0.4; // leichter Bogen nach oben
     camera.fov = lerp(56, 46, e); camSet(p, tg);
