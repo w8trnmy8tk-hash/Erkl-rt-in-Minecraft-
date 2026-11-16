@@ -80,12 +80,12 @@ room.fog = new THREE.Fog(0x1b2030, 12, 26);
   const floor = M(T.planks), wall = M(T.wallpaper), dw = M(T.darkwood);
   room.add(box(8, 0.2, 9, floor, 0, -0.1, 0));
   // Wände: hinten (z=-4.5) mit Fenster-Loch, links (x=-4) mit Bild, rechts (x=4)
-  const WH = 4.2;
+  const WH = 7.0; // hohe Wände, damit die weit entfernte Kamera nicht über die Wand schaut
   // Rückwand mit Fenster (Loch x 0.4..2.2, y 1.2..3.2)
   room.add(box(4.4, WH, 0.3, wall, -1.8, WH / 2, -4.6));
   room.add(box(1.8, WH, 0.3, wall, 3.1, WH / 2, -4.6));
   room.add(box(1.8, 1.2, 0.3, wall, 1.3, 0.6, -4.6));
-  room.add(box(1.8, 1.0, 0.3, wall, 1.3, 3.7, -4.6));
+  room.add(box(1.8, WH - 3.2, 0.3, wall, 1.3, 3.2 + (WH - 3.2) / 2, -4.6));
   room.add(box(0.3, WH, 9.4, wall, -4.15, WH / 2, 0));
   room.add(box(0.3, WH, 9.4, wall, 4.15, WH / 2, 0));
   const ceil = box(8.6, 0.3, 9.4, dw, 0, WH + 0.15, 0); ceil.layers.set(1); room.add(ceil); // Decke: nur Schatten, für Kamera unsichtbar
@@ -364,7 +364,7 @@ function animateRoom(t) {
   b.position.y = Math.sin(t * 2.2) * 0.012; b.rotation.y = Math.sin(t * 1.3) * 0.03;
 }
 
-const WHIP0 = 0.85, WHIP1 = 1.30; // Kranfahrt startet auf "erklärt"
+const WHIP0 = 0.85, WHIP1 = 1.42; // Kranfahrt startet auf "erklärt"
 function heroPose(tt) { const k = (tt + LOOP_LEN) / (HERO_LEN + LOOP_LEN);
   return [V(lerp(1.5, 0.9, k), lerp(2.2, 1.95, k), lerp(2.6, 1.4, k)), V(lerp(-1.25, -1.4, k), 0.82, lerp(-2.6, -2.75, k))]; }
 const mbCanvas = document.createElement('canvas'); mbCanvas.style.cssText = 'position:absolute;inset:0;width:1080px;height:1920px';
@@ -411,10 +411,10 @@ function renderAt(t, tShot) {
     const m = Math.min(1, Math.max(0, (t - WHIP0) / (WHIP1 - WHIP0)));
     const e = m * m * m * (m * (m * 6 - 15) + 10); // smootherstep
     const drift = Math.max(0, t - WHIP1) * 0.12;   // danach leichtes Weitertreiben
-    const p1 = V(-2.6 + drift, 6.0 + drift * 0.3, 4.6 - drift * 0.6), t1 = V(-1.0 + drift * 0.5, 0.3, -2.3);
+    const p1 = V(-2.0 + drift * 0.8, 10.0 + drift * 0.4, 6.5 + drift * 0.6), t1 = V(-0.8 + drift * 0.4, 0.2, -2.7);
     const p = p0.clone().lerp(p1, e), tg = t0.clone().lerp(t1, e);
     p.y += Math.sin(e * Math.PI) * 0.4; // leichter Bogen nach oben
-    camera.fov = lerp(56, 50, e); camSet(p, tg); focus = lerp(4.2, 7, e); ap = 0.0008;
+    camera.fov = lerp(56, 46, e); camSet(p, tg);
   } else if (shot[2] === 'wide') {
     // Totale aus der Zimmerecke unter der Decke; startet mit Restschwung des Whip-Pans und bremst aus
     const d = Math.exp(-(t - WHIP1) * 7), drift = (t - WHIP1) * 0.1;
@@ -446,9 +446,9 @@ function renderAt(t, tShot) {
   }
   camera.updateProjectionMatrix();
   rp.scene = scene; bokeh.scene = scene;
-  bokeh.uniforms.focus.value = focus; bokeh.uniforms.aperture.value = ap; bokeh.enabled = ap > 0;
+  bokeh.uniforms.focus.value = focus; bokeh.uniforms.aperture.value = ap; bokeh.enabled = false;
   renderer.toneMappingExposure = scene === prague ? 1.35 : 1.6;
-  bloom.strength = 0.12;
+  bloom.strength = 0; bloom.enabled = false; bokeh.enabled = false; room.userData.dust.visible = false;
   composer.render();
 }
 
