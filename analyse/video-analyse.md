@@ -235,3 +235,15 @@ Das ist der eigentliche Trick: **Die Geschichte wird zusätzlich über Minecraft
 8. **Untertitel:** Wort für Wort, Montserrat ExtraBold weiß, Bildmitte, 2-Frame-Fade von grau zu weiß.
 9. **Audio:** Erzählerstimme + durchgehendes, leises, bassiges Musikbett. Keine Stille.
 10. **Ende:** „[Autor] zeigt: [Thema].“ auf dem Schild bei Sonnenuntergang, dann harter Schnitt zurück auf Shot 1.
+
+---
+
+## 11. Freigegebene Hook-Einstellung (Preset)
+
+Gespeichert in `test-video/presets/hook-kranfahrt.json`, Beispielvideo `test-video/hook-4s-freigegeben.mp4`.
+
+- 0–0,85 s: Two-Shot auf Augenhöhe, zwei Figuren mit Nametags, langsamer Push-in.
+- 0,85–1,42 s (ab „erklärt“): **eine durchgehende Kranfahrt** nach hinten, oben (+8,4 m) und zur Seite (2,9 m nach links), smootherstep-Kurve, leichter Bogen nach oben. **Kein Schnitt, kein Motion Blur.**
+- danach: hohe, seitliche Totale, Kamera treibt leicht weiter, Figur läuft klein durchs Bild.
+- Erst auf den Ortsnamen folgt der harte Schnitt zur Establishing-Totale mit `[Info]`-Label.
+- Look: kein Bloom, keine Tiefenunschärfe, keine Vignette, keine Partikel. Klar und weich beleuchtet.

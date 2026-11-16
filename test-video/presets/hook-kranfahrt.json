@@ -1,0 +1,60 @@
+{
+  "name": "Hook – Two-Shot + durchgehende Kranfahrt (freigegeben)",
+  "referenz": "To Kill a Mockingbird / Hamlet / The Crucible, 0–2.7 s",
+  "format": { "breite": 1080, "hoehe": 1920, "fps": 30, "render_aufloesung_faktor": 0.75 },
+  "ablauf": [
+    { "von": 0.00, "bis": 0.85, "shot": "Two-Shot auf Augenhöhe, 2 Figuren links/rechts mit Nametags, langsamer Push-in", "text": "[Titel]," },
+    { "von": 0.85, "bis": 1.42, "shot": "EINE durchgehende Kranfahrt nach hinten + oben + seitlich (links). KEIN Schnitt, KEIN Motion Blur", "text": "erklärt in" },
+    { "von": 1.42, "bis": 2.22, "shot": "hohe, seitliche Totale, Kamera treibt langsam weiter, Figur läuft klein durchs Bild", "text": "Minecraft." },
+    { "von": 2.22, "bis": 4.00, "shot": "harter Schnitt auf den Ortsnamen: Establishing-Totale + [Info]-Label", "text": "[Ort], [Jahr]." }
+  ],
+  "kamera": {
+    "start_position": [-0.85, 1.62, 2.1],
+    "push_in_ende_position": [-0.85, 1.58, 1.75],
+    "start_ziel": [-0.95, 1.05, -2.6],
+    "kranfahrt_start_s": 0.85,
+    "kranfahrt_ende_s": 1.42,
+    "kranfahrt_dauer_s": 0.57,
+    "kurve": "smootherstep (6t^5 - 15t^4 + 10t^3) – weich an, weich aus",
+    "bogen_nach_oben_m": 0.4,
+    "end_position": [-3.75, 10.0, 6.0],
+    "end_ziel": [-0.2, 0.2, -2.6],
+    "drift_danach_pro_s": { "position": [0.0, 0.048, 0.084], "ziel": [0.06, 0.0, 0.0] },
+    "fov_start_grad": 56,
+    "fov_ende_grad": 46,
+    "seitlicher_weg_m": 2.9,
+    "hoehe_gewinn_m": 8.4
+  },
+  "look": {
+    "bloom": false,
+    "tiefenunschaerfe": false,
+    "vignette": false,
+    "partikel_staub": false,
+    "motion_blur": false,
+    "tonemapping": "ACES Filmic",
+    "belichtung_innen": 1.6,
+    "belichtung_aussen": 1.35,
+    "schatten": "PCF Soft, weich",
+    "licht_innen": "kaltes Fensterlicht (0xb4c8ff) + warme Lampe (0xff9c4a) + Hemisphere + neutrales Fill von vorne"
+  },
+  "untertitel": {
+    "schrift": "Montserrat ExtraBold (800)",
+    "groesse_px": 72,
+    "position_y_px": 905,
+    "farbe": "#ffffff",
+    "schatten": "0 3px 8px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.5)",
+    "einblendung": "ein Wort zur Zeit, Fade grau->weiß in ~2 Frames"
+  },
+  "ui": {
+    "nametag_schrift": "Pixelify Sans 600, 40px, Hintergrund rgba(0,0,0,.32)",
+    "farben": { "held": "#ffd23f", "verbuendete": "#55ffff", "antagonist": "#ff5555" },
+    "info_label": "[Info] in #ffd23f, Text weiß, oben links (left 28px, top 300px)"
+  },
+  "audio": {
+    "stimme": "ElevenLabs 'Niklas' (SR5PqrZCNyNgSyTEWnLu), eleven_multilingual_v2, stability 0.55, similarity 0.8, style 0.15, speed 1.08",
+    "musikbett": "leise, bassig, Sidechain-Ducking unter der Stimme",
+    "sfx": "Whoosh zur Kranfahrt (0.88 s), leiser Whoosh zum Schnitt (2.1 s)",
+    "lautheit": "-14 LUFS, True Peak -1.5 dB"
+  },
+  "quelle": "test-video/scene.js (Shot 'hero'), freigegebenes Video: test-video/hook-4s-freigegeben.mp4"
+}
