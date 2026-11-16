@@ -1,12 +1,7 @@
 node_modules/
-frames/
-test/
+frames*/
+test*/
 *.jpg
-audio/req_*.json
-test2/
 *.log
+audio/req_*.json
 audio/pre.wav
-frames2/
-frames3/
-frames4/
-test5/
