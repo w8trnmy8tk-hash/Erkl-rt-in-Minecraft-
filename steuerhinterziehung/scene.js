@@ -558,7 +558,7 @@ function drawTexts() {
 // =====================================================================
 const words = await (await fetch('words.json')).json();
 const wt = i => words[i][1];
-const SPEECH_END = 75.30; // hörbares Ende der Sprache (gemessen, −45 dB)
+const SPEECH_END = 75.40; // hörbares Ende der Sprache (gemessen, −45 dB)
 const DUR = Math.round((SPEECH_END + 0.16) * 30) / 30;
 const WHIP0 = wt(1) - 1 / 30, WHIP1 = WHIP0 + 0.57; // wt(1) = hörbarer Einsatz „erklärt“ (erklaert-onset.py --fix); 1 Frame Vorlauf
 const CUTS = [[0, 'hero'], [4, 'chicago'], [9, 'capone'], [17, 'alcohol'], [25, 'nobody'], [33, 'witness'], [40, 'wilson'], [48, 'search'], [55, 'luxury'], [66, 'noreturn'], [73, 'believes'],
