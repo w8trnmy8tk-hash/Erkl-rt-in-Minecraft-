@@ -259,7 +259,7 @@ const PONZI = { skin: 0xe8b894, hair: 0x141010, beard: 'mustache', top: 0xe8dcc0
 const ROSA = { skin: 0xf0c4a2, hair: 0x6a3a1a, longHair: true, top: 0x2a6aa8, bottom: 0x2a6aa8, skirt: true, shoe: 0x3a2416, eye: '#3a5a2a', smile: true, seed: 52 };
 const BARRON = { skin: 0xf0c8a8, hair: 0xe8e8e8, bald: true, beard: 'full', beardCol: 0xf0f0f0, top: 0x3a3a44, bottom: 0x3a3a44, coat: true, tie: 0x8a2a2a, shoe: 0x111111, eye: '#3a3a3a', smile: true, seed: 53 };
 const MADOFF = { skin: 0xf0c8a8, hair: 0xc8c8c8, hairVol: true, top: 0x23262e, bottom: 0x23262e, coat: true, tie: 0x2a4a8a, shoe: 0x111111, eye: '#3a3a3a', smile: true, seed: 54 };
-const goldM = M(T.gold, { metal: 0.6, rough: 0.35 });
+const goldM = M(T.gold, { metal: 0.25, rough: 0.45 });
 function boater(ch) { const g = new THREE.Group(); const st = C(0xe8d08a); g.add(box(0.74, 0.04, 0.74, st, 0, 0.53, 0)); g.add(box(0.52, 0.18, 0.52, st, 0, 0.63, 0)); g.add(box(0.53, 0.07, 0.53, C(0x1a1a22), 0, 0.58, 0)); ch.userData.head.add(g); ch.userData.hatExtra = 0.2; return g; }
 function cloche(ch, col) { const g = new THREE.Group(); const m = C(col); g.add(box(0.58, 0.2, 0.58, m, 0, 0.53, 0)); g.add(box(0.64, 0.05, 0.64, m, 0, 0.45, 0.02)); g.add(box(0.1, 0.1, 0.04, C(0xe8e0d0), 0.2, 0.55, 0.29, { cast: false })); ch.userData.head.add(g); ch.userData.hatExtra = 0.12; return g; }
 const goldBar = () => { const g = new THREE.Group(); g.add(box(0.3, 0.16, 0.2, goldM, 0, 0, 0.12)); return g; };
@@ -307,7 +307,7 @@ const boston = new THREE.Scene();
   of.add(box(11.4, 0.8, 1.2, M(T.white), 0, 6.9, 4.4)); of.add(box(7.4, 1.4, 0.2, goldM, 0, 8.4, 4.1));
   const signT = tex(37, 7, (c) => { c.fillStyle = '#2a1a10'; c.fillRect(0, 0, 37, 7); c.fillStyle = '#ffd23f'; const L = { S: ['111', '100', '111', '001', '111'], E: ['111', '100', '110', '100', '111'], C: ['111', '100', '100', '100', '111'], O: ['111', '101', '101', '101', '111'], '.': ['0', '0', '0', '0', '1'], ' ': ['0', '0', '0', '0', '0'] };
     let x = 1; for (const ch of 'SEC CO.') { const g = L[ch]; for (let yy = 0; yy < 5; yy++) for (let xx = 0; xx < g[0].length; xx++) if (g[yy][xx] === '1') c.fillRect(x + xx, yy + 1, 1, 1); x += g[0].length + 1; } }, 3104);
-  of.add(box(6.8, 1.0, 0.05, M(signT), 0, 8.4, 4.22, { cast: false }));
+  { const pl = new THREE.Mesh(new THREE.PlaneGeometry(6.8, 1.0), M(signT)); pl.position.set(0, 8.4, 4.23); of.add(pl); }
   of.add(box(2.0, 3.2, 0.1, C(0x3a2416), 2.6, 1.6, 4.02, { cast: false })); for (const x of [-3.2, -1.0]) for (const y of [2.2, 9.8]) of.add(box(1.4, 2.2, 0.1, M(T.window), x, y, 4.02, { cast: false }));
   // Custom-House-Turm am Ende der Straße
   const tw = new THREE.Group(); tw.position.set(-70, 0, 4); boston.add(tw); tw.add(box(14, 18, 14, stone, 0, 9, 0)); tw.add(box(8, 44, 8, stone, 0, 22, 0)); tw.add(box(9, 1.2, 9, M(T.white), 0, 44.6, 0));
@@ -317,11 +317,13 @@ const boston = new THREE.Scene();
   const car = (x, z, ry, col) => { const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; const b = C(col, { metal: 0.3, rough: 0.5 }); g.add(box(3.6, 0.7, 1.6, b, 0, 0.75, 0)); g.add(box(1.8, 0.9, 1.5, b, -0.4, 1.55, 0)); g.add(box(1.4, 0.55, 1.52, C(0x6a8aa8), -0.4, 1.6, 0, { cast: false }));
     for (const wx of [-1.2, 1.2]) for (const wz of [-0.8, 0.8]) g.add(box(0.75, 0.75, 0.25, C(0x141414), wx, 0.38, wz)); g.add(box(0.2, 0.3, 0.3, new THREE.MeshBasicMaterial({ color: 0xfff0c0 }), 1.82, 0.95, 0.5, { cast: false })); boston.add(g); };
   car(9.5, 3.4, 0.1, 0x141414); car(-12, 5.2, Math.PI, 0x2a3a2a); car(24, 13, Math.PI, 0x3a1a1a); car(-30, 2.6, 0, 0x141414);
-  const ball = voxelBall(1.5, 0.3, snowGoldCol); ball.position.set(0.05, 1.5, -3.1); boston.add(ball);
+  const ball = voxelBall(2.1, 0.3, snowGoldCol); ball.position.set(0.05, 2.05, -5.6); boston.add(ball);
+  { const gr = rng(3110); for (let i = 0; i < 46; i++) { const a = gr() * Math.PI * 2, d = 1.6 + gr() * 2.6, x = Math.sin(a) * d * 1.2, z = -5.6 + Math.cos(a) * d * 0.8; if (z > -1.2) continue; const b = box(0.32, 0.18, 0.22, goldM, x, 0.09 + (gr() < 0.3 ? 0.18 : 0), z); b.rotation.y = gr() * 3; boston.add(b); }
+    for (const [x, z, ry] of [[-1.7, 0.9, 1.2], [1.8, 0.7, 0.3], [-2.2, -0.6, 0.5], [2.3, -0.9, -0.4]]) { const b = box(0.32, 0.18, 0.22, goldM, x, 0.09, z); b.rotation.y = ry; boston.add(b); } }
   const crate = new THREE.Group(); crate.add(box(1.0, 0.6, 1.0, M(T.planks), 0, 0.3, 0)); boston.add(crate);
   const sun = sunLight(boston, 0xffc890, 3.6, V(-60, 30, 55), V(0, 0, -4), 40); boston.add(new THREE.HemisphereLight(0xb8c8f0, 0x7a5a3a, 1.25));
   const ponzi = humanoid(PONZI); boater(ponzi); const pBar = inHand(ponzi, goldBar());
-  const rosa = humanoid(ROSA); cloche(rosa, 0x8a2a3a); const rBag = inHand(rosa, moneyBag());
+  const rosa = humanoid(ROSA); cloche(rosa, 0xd0506a); const rBag = inHand(rosa, moneyBag());
   const crowd = []; for (let i = 0; i < 30; i++) { const p = person1920(i, 3200 + i); boston.add(p); crowd.push(p); }
   const boy = humanoid({ skin: 0xf0c4a2, hair: 0xb8925a, top: 0x6a5a4a, bottom: 0x3a3228, scale: 0.75, seed: 3240 }); boy.userData.head.add(box(0.56, 0.12, 0.56, C(0x4a443c), 0, 0.53, 0)); const bPaper = inHand(boy, newspaper());
   const bulb = new THREE.Group(); bulb.add(box(0.26, 0.3, 0.26, new THREE.MeshBasicMaterial({ color: 0xfff27a }), 0, 0, 0, { cast: false })); bulb.add(box(0.16, 0.1, 0.16, C(0x8a8a8a), 0, -0.2, 0, { cast: false })); boston.add(bulb);
@@ -343,7 +345,7 @@ const office = roomScene(9, 8, 3.4, M(T.wallpaperBeige), M(T.planks));
     [[4, 6, 14, 10], [8, 16, 8, 6], [12, 22, 4, 6], [40, 5, 14, 9], [44, 14, 5, 4], [50, 14, 3, 7], [52, 20, 2, 2]].forEach(([x, y, w, h]) => c.fillRect(x, y, w, h));
     c.fillStyle = '#e8402a'; c.fillRect(51, 17, 2, 2); c.fillStyle = '#2aa84a'; c.fillRect(16, 10, 2, 2); c.fillStyle = '#ffd23f'; for (let x = 19; x < 50; x += 3) c.fillRect(x, 13 + Math.round(Math.sin((x - 19) / 31 * Math.PI) * -4), 2, 1);
     c.fillStyle = '#5a3a1a'; for (let i = 0; i < 64; i++) { c.fillRect(i, 0, 1, 1); c.fillRect(i, 31, 1, 1); } for (let i = 0; i < 32; i++) { c.fillRect(0, i, 1, 1); c.fillRect(63, i, 1, 1); } }, 3301);
-  s.add(box(3.6, 1.8, 0.05, new THREE.MeshStandardMaterial({ map: mapT, roughness: 0.9 }), 0, 2.15, -3.82, { cast: false }));
+  { const pl = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.8), new THREE.MeshStandardMaterial({ map: mapT, roughness: 0.9 })); pl.position.set(0, 2.15, -3.8); s.add(pl); }
   const crate = new THREE.Group(); crate.position.set(1.55, 0.85, -1.5); s.add(crate); const cw = M(T.planks);
   crate.add(box(0.7, 0.05, 0.5, cw, 0, 0.0, 0)); crate.add(box(0.7, 0.35, 0.05, cw, 0, 0.18, 0.23)); crate.add(box(0.7, 0.35, 0.05, cw, 0, 0.18, -0.23)); crate.add(box(0.05, 0.35, 0.5, cw, 0.33, 0.18, 0)); crate.add(box(0.05, 0.35, 0.5, cw, -0.33, 0.18, 0));
   crate.add(box(0.2, 0.01, 0.14, C(0xe8e2c8), 0.08, 0.04, 0.02, { cast: false }));
@@ -460,7 +462,7 @@ const nyc = new THREE.Scene();
 const modern = roomScene(10, 8, 3.4, M(tex(16, 16, (c, r) => noiseFill(c, r, 16, 16, 0xd8d8dc, 0.03), 3901)), M(tex(16, 16, (c, r) => noiseFill(c, r, 16, 16, 0x3a3a44, 0.05), 3902)));
 {
   const s = modern; const sky = tex(64, 32, (c, r) => { c.fillStyle = '#7ab0e0'; c.fillRect(0, 0, 64, 32); for (let x = 0; x < 64; x += 4 + Math.floor(r() * 4)) { const h = 8 + Math.floor(r() * 20); c.fillStyle = hex(shade(0x6a7a90, 0.8 + r() * 0.3)); c.fillRect(x, 32 - h, 4, h); } }, 3903);
-  s.add(box(8, 2.4, 0.05, new THREE.MeshBasicMaterial({ map: sky }), 0, 1.8, -3.82, { cast: false })); for (const x of [-4, -2, 0, 2, 4]) s.add(box(0.1, 2.5, 0.1, C(0x2a2a2e), x, 1.8, -3.78, { cast: false }));
+  { const pl = new THREE.Mesh(new THREE.PlaneGeometry(8, 2.4), new THREE.MeshBasicMaterial({ map: sky })); pl.position.set(0, 1.8, -3.8); s.add(pl); } for (const x of [-4, -2, 0, 2, 4]) s.add(box(0.1, 2.5, 0.1, C(0x2a2a2e), x, 1.8, -3.78, { cast: false }));
   s.add(box(2.6, 0.08, 1.1, C(0x1a1a1e, { metal: 0.4, rough: 0.3 }), 0, 0.8, -1.6)); for (const x of [-1.2, 1.2]) s.add(box(0.08, 0.8, 1.0, C(0x8a8a92, { metal: 0.6 }), x, 0.4, -1.6));
   const chart = tex(32, 20, (c) => { c.fillStyle = '#0a1a10'; c.fillRect(0, 0, 32, 20); c.fillStyle = '#3aff6a'; let y = 16; for (let x = 1; x < 31; x++) { y -= (x % 5 === 0 ? -1 : 0.5); c.fillRect(x, Math.round(y), 1, 1); } }, 3904);
   for (const x of [-0.5, 0.5]) { s.add(box(0.8, 0.5, 0.05, C(0x111114), x, 1.2, -1.9)); const sc = new THREE.Mesh(new THREE.PlaneGeometry(0.74, 0.44), new THREE.MeshBasicMaterial({ map: chart })); sc.position.set(x, 1.2, -1.87); s.add(sc); }
@@ -559,15 +561,15 @@ function render(frame) {
     reset([ponzi, rosa, boy, ...crowd]); B.pBar.visible = B.rBag.visible = false; B.bPaper.visible = true; B.crate.visible = false; B.bulb.visible = false; B.ball.visible = true;
     B.ball.rotation.set(ta * 0.08, ta * 0.15, 0);
     crowd.forEach((p, i) => { if (i >= 26) return; const [x, y, z] = QUEUE(i); put(p, x, y, z, -Math.PI / 2 + 0.55); pose3(p, 'idle', ta, i); });
-    if (['hero', 'loop', 'boston'].includes(sh.id)) { put(rosa, HX, 0, HZ, 0.42); put(ponzi, HX2, 0, HZ, -0.42); pose3(rosa, 'idle', ta, 0); rosa.userData.armR.rotation.x = -1.0; B.rBag.visible = true;
-      pose3(ponzi, 'pose', ta, 1); ponzi.userData.armR.rotation.x = -1.75 + Math.sin(ta * 2) * 0.05; ponzi.userData.armR.rotation.z = 0.15; B.pBar.visible = true; ponzi.userData.head.rotation.y = -0.15; rosa.userData.head.rotation.y = 0.25;
+    if (['hero', 'loop', 'boston'].includes(sh.id)) { put(rosa, HX, 0, HZ, 0.42); put(ponzi, HX2, 0, HZ, -0.42); pose3(rosa, 'idle', ta, 0); rosa.userData.armR.rotation.x = -0.7; B.rBag.visible = true;
+      pose3(ponzi, 'pose', ta, 1); ponzi.userData.armR.rotation.x = -2.25 + Math.sin(ta * 2) * 0.05; ponzi.userData.armR.rotation.z = 0.3; B.pBar.visible = true; ponzi.userData.head.rotation.y = -0.15; rosa.userData.head.rotation.y = 0.25;
       if (sh.id !== 'boston') { heroCam(ta); tag(rosa, 'Anlegerin', HERO); tag(ponzi, 'Ponzi', BAD); } }
-    if (sh.id === 'boston') { mv(u, V(46, 24, 30), V(43, 23, 28), V(-30, 8, -2), V(-32, 8, -2), 46); info(wt(4), 'Boston, vor 100 Jahren'); }
+    if (sh.id === 'boston') { mv(u, V(40, 30, 8), V(37, 29, 7.5), V(-40, 14, 2), V(-42, 14, 2), 46); info(wt(4), 'Boston, vor 100 Jahren'); }
     if (sh.id === 'ponzi') { B.ball.visible = false; put(ponzi, -9.6, 0.18, -8.6, 0.35); pose3(ponzi, 'idle', t); ponzi.userData.setFace({ smile: false });
       mv(u, V(-8.4, 1.75, -4.4), V(-8.55, 1.72, -5.0), V(-9.6, 1.5, -8.6), V(-9.6, 1.5, -8.6), 46); tag(ponzi, 'Charles Ponzi', BAD); info(wt(12), 'Einwanderer aus Italien'); }
     if (sh.id === 'idea') { B.ball.visible = false; put(ponzi, -9.6, 0.18, -8.6, 0.35); const lit = t >= wt(17); pose3(ponzi, lit ? 'pose' : 'sadidle', t); ponzi.userData.setFace(lit ? {} : { sad: true, smile: false });
       if (lit) { B.bulb.visible = true; const k = smoother((t - wt(17)) / 0.25); B.bulb.position.set(-9.6, 0.18 + 2.75 + k * 0.1, -8.6); B.bulb.scale.setScalar(k); }
-      mv(u, V(-9.0, 2.0, -6.0), V(-9.1, 1.98, -6.4), V(-9.6, 1.95, -8.6), V(-9.6, 1.95, -8.6), 48); tag(ponzi, 'Ponzi', BAD, 0.35); eff(wt(15), 'Kontostand', '0 $', BAD); }
+      mv(u, V(-8.7, 2.3, -4.2), V(-8.8, 2.28, -4.6), V(-9.6, 2.05, -8.6), V(-9.6, 2.05, -8.6), 48); tag(ponzi, 'Ponzi', BAD, 0.35); eff(wt(15), 'Kontostand', '0 $', BAD); }
     if (sh.id === 'promise') { B.crate.visible = true; B.crate.position.set(-6, 0.18, -5.2); put(ponzi, -6, 0.78, -5.2, 0.15); pose3(ponzi, t >= wt(47) ? 'fist' : 'point', t); if (t >= wt(47)) pose(ponzi, 'fist', t);
       crowd.slice(26).concat(crowd.slice(0, 4)).forEach((p, i) => { const a = -0.9 + i * 0.36, x = -6 + Math.sin(a) * 3.2, z = -5.2 + Math.cos(a) * 3.2; put(p, x, 0, z, facing(x, z, -6, -5.2)); pose3(p, i % 3 ? 'idle' : 'clap', t, i); });
       mv(u, V(-3.2, 2.2, 3.6), V(-3.5, 2.15, 2.9), V(-6, 1.8, -5.2), V(-6, 1.8, -5.2), 48); tag(ponzi, 'Ponzi', BAD);
@@ -593,13 +595,13 @@ function render(frame) {
       mv(u, V(0.7, 1.8, 1.4), V(0.6, 1.76, 0.9), V(0, 1.3, -2.1), V(0, 1.3, -2.1), 48); tag(O.ponzi, 'Ponzi', BAD);
       tip(wt(25), 'mail', 'Internationaler Antwortschein', '#55ffff', [gray('Gutschein für Briefporto,'), gray('in vielen Ländern einlösbar')]); }
     if (sh.id === 'arbitrage') { put(O.ponzi, -1.6, 0, -2.9, 0.5); pose3(O.ponzi, 'point', t); O.ponzi.userData.armR.rotation.y = -0.6; O.ponzi.rotation.y = 0.6;
-      mv(u, V(-0.3, 2.0, 1.9), V(-0.1, 2.0, 1.3), V(0.0, 1.9, -3.4), V(0.1, 1.9, -3.4), 50); tag(O.ponzi, 'Ponzi', BAD);
+      mv(u, V(0.6, 1.9, 3.2), V(0.5, 1.9, 2.7), V(-0.6, 1.7, -3.2), V(-0.5, 1.7, -3.2), 50); tag(O.ponzi, 'Ponzi', BAD);
       info(wt(28), `Italien: Antwortschein ${green('billig')}`); info(wt(33), `Amerika: ${gold('mehr Briefmarken')}`); }
     if (sh.id === 'millions') { put(O.ponzi, -0.3, 0, -0.6, 0.15); pose3(O.ponzi, 'cheer', t); mv(u, V(0.4, 1.9, 4.4), V(0.3, 1.85, 3.7), V(0, 1.2, -1.2), V(0, 1.2, -1.2), 52); tag(O.ponzi, 'Ponzi', BAD); eff(wt(81), 'Eingesammelt', 'Millionen $', HERO); }
-    if (sh.id === 'empty') { put(O.ponzi, 0.5, 0, -2.4, 0.2); pose3(O.ponzi, 'lookdown', t); mv(u, V(2.4, 2.1, 0.4), V(2.3, 2.05, 0.1), V(1.4, 0.95, -1.5), V(1.4, 0.95, -1.5), 50); tag(O.ponzi, 'Ponzi', BAD); chat(wt(87), gray('Gekaufte Antwortscheine: fast keine')); }
-    if (sh.id === 'pay') { put(O.ponzi, 0, 0, -0.2, 0); pose3(O.ponzi, 'give', t); put(O.nv, -1.5, 0, 0.9, 0.75); pose3(O.nv, 'give', t, 1); put(O.old, 1.5, 0, 0.9, -0.75); pose3(O.old, 'give', t, 2);
-      const c = ((t - sh.a) / 1.25) % 1, P0 = V(-1.05, 1.05, 1.25), P1 = V(0, 1.15, 0.4), P2 = V(1.05, 1.05, 1.25); O.coin.visible = true; O.coin.position.copy(c < 0.5 ? P0.clone().lerp(P1, smoother(c * 2)) : P1.clone().lerp(P2, smoother(c * 2 - 1))); O.coin.position.y += Math.sin((c * 2 % 1) * Math.PI) * 0.25;
-      mv(u, V(0, 2.1, 5.0), V(0, 2.05, 4.4), V(0, 1.15, 0.4), V(0, 1.15, 0.4), 48); tag(O.ponzi, 'Ponzi', BAD); tag(O.nv, 'Neuer Anleger', ALLY); tag(O.old, 'Alte Anlegerin', HERO); }
+    if (sh.id === 'empty') { put(O.ponzi, 0.5, 0, -2.4, 0.2); pose3(O.ponzi, 'lookdown', t); mv(u, V(2.2, 2.5, 1.6), V(2.1, 2.45, 1.2), V(1.0, 1.15, -1.8), V(1.0, 1.15, -1.8), 50); tag(O.ponzi, 'Ponzi', BAD); chat(wt(87), gray('Gekaufte Antwortscheine: fast keine')); }
+    if (sh.id === 'pay') { put(O.ponzi, 0, 0, -0.2, 0); pose3(O.ponzi, 'give', t); put(O.nv, -1.05, 0, 0.9, 0.75); pose3(O.nv, 'give', t, 1); put(O.old, 1.05, 0, 0.9, -0.75); pose3(O.old, 'give', t, 2);
+      const c = ((t - sh.a) / 1.25) % 1, P0 = V(-0.7, 1.05, 1.25), P1 = V(0, 1.15, 0.4), P2 = V(0.7, 1.05, 1.25); O.coin.visible = true; O.coin.position.copy(c < 0.5 ? P0.clone().lerp(P1, smoother(c * 2)) : P1.clone().lerp(P2, smoother(c * 2 - 1))); O.coin.position.y += Math.sin((c * 2 % 1) * Math.PI) * 0.25;
+      mv(u, V(0, 2.1, 6.4), V(0, 2.05, 5.8), V(0, 1.2, 0.4), V(0, 1.2, 0.4), 48); tag(O.ponzi, 'Ponzi', BAD); tag(O.nv, 'Neuer Anleger', ALLY); tag(O.old, 'Alte Anlegerin', HERO); }
   }
   // ---------- Pyramide ----------
   if (['term', 'growth', 'math', 'six', 'collapse'].includes(sh.id)) {
@@ -620,18 +622,18 @@ function render(frame) {
       tip(wt(122), 'people', 'Jeder wirbt 6 Neue', '#55ffff', [gray('Runde 1: 6'), t >= wt(124) ? gray('Runde 2: 36') : '', t >= wt(125) ? gray('Runde 3: 216 …') : ''].filter(Boolean)); }
     if (sh.id === 'collapse') { mv(u, V(-6, 7, 20), V(-5.4, 6.4, 18.6), V(0, 1.8, 0), V(0, 1.4, 0), 48); chat(wt(172) + 0.2, red('Ponzis System ist zusammengebrochen')); }
   }
-  if (sh.id === 'earth') { scene = earth; exp = 1.2; earth.userData.ball.rotation.set(0.35, t * 0.12, 0); mv(u, V(0, 2, 34), V(0, 1.6, 30), V(0, -1.2, 0), V(0, -1.2, 0), 46);
+  if (sh.id === 'earth') { scene = earth; exp = 1.2; earth.userData.ball.rotation.set(0.35, t * 0.12, 0); mv(u, V(0, 2, 52), V(0, 1.6, 48), V(0, -2.5, 0), V(0, -2.5, 0), 46);
     tip(wt(129), 'globe', 'Runde 13', '#ff5555', [gray('Nötig: 13 Mrd. Menschen'), t >= wt(133) ? red('Auf der Erde: ca. 8 Mrd.') : ''].filter(Boolean)); }
   // ---------- Barron ----------
   if (['barron', 'need', 'exist'].includes(sh.id)) {
     scene = news; exp = 1.35; const N = news.userData; put(N.barron, 0, 0, -2.0, 0); sitPose(N.barron, 0.54); pose(N.barron, 'write', t); sitPose(N.barron, 0.54); N.bp.visible = sh.id === 'exist'; N.barron.userData.setFace({ smile: sh.id !== 'need' });
-    if (sh.id === 'barron') { mv(u, V(1.6, 1.9, 2.4), V(1.4, 1.86, 1.9), V(0, 1.3, -1.8), V(0, 1.3, -1.8), 46); tag(N.barron, 'Clarence Barron', ALLY); info(wt(141), 'Finanzjournalist'); }
-    if (sh.id === 'need') { mv(u, V(-0.9, 1.75, 1.4), V(-0.8, 1.72, 1.0), V(0, 1.45, -2.0), V(0, 1.45, -2.0), 46); tag(N.barron, 'Barron', ALLY);
+    if (sh.id === 'barron') { mv(u, V(1.4, 2.0, 3.4), V(1.25, 1.96, 2.9), V(0, 1.35, -1.8), V(0, 1.35, -1.8), 46); tag(N.barron, 'Clarence Barron', ALLY); info(wt(141), 'Finanzjournalist'); }
+    if (sh.id === 'need') { mv(u, V(-1.1, 1.9, 2.6), V(-1.0, 1.87, 2.2), V(0, 1.45, -2.0), V(0, 1.45, -2.0), 46); tag(N.barron, 'Barron', ALLY);
       tip(wt(150), 'mail', 'Barrons Rechnung', '#55ffff', [gray('Nötig: 160.000.000'), gray('Antwortscheine')]); }
-    if (sh.id === 'exist') { N.barron.userData.armR.rotation.x = -1.7; mv(u, V(0.6, 1.7, 2.0), V(0.5, 1.68, 1.6), V(0, 1.5, -2.0), V(0, 1.5, -2.0), 46); tag(N.barron, 'Barron', ALLY);
+    if (sh.id === 'exist') { N.barron.userData.armR.rotation.x = -1.7; mv(u, V(0.7, 1.85, 2.8), V(0.6, 1.82, 2.4), V(0, 1.5, -2.0), V(0, 1.5, -2.0), 46); tag(N.barron, 'Barron', ALLY);
       tip(sh.a, 'mail', 'Barrons Rechnung', '#55ffff', [gray('Nötig: 160.000.000'), t >= wt(156) ? red('Im Umlauf: ca. 27.000') : ''].filter(Boolean)); }
   }
-  if (sh.id === 'jail' || sh.id === 'prison') { scene = cell; exp = 1.3; const Z = cell.userData; reset([Z.pz, Z.md]); const ch = sh.id === 'jail' ? Z.pz : Z.md; put(ch, -0.6, 0, -1.25, 0.15); pose3(ch, 'sadidle', t); sitPose(ch, 0.66); ch.userData.setFace({ sad: true, smile: false });
+  if (sh.id === 'jail' || sh.id === 'prison') { scene = cell; exp = 1.6; const Z = cell.userData; reset([Z.pz, Z.md]); const ch = sh.id === 'jail' ? Z.pz : Z.md; put(ch, -0.6, 0, -1.25, 0.15); pose3(ch, 'sadidle', t); sitPose(ch, 0.66); ch.userData.setFace({ sad: true, smile: false });
     if (sh.id === 'jail') { mv(u, V(0.9, 1.5, 1.4), V(0.8, 1.48, 1.1), V(-0.7, 1.2, -1.2), V(-0.7, 1.2, -1.2), 48); tag(ch, 'Ponzi', BAD, -0.1); chat(wt(176), red('Ponzi wurde verhaftet (1920)')); }
     else { mv(u, V(1.0, 1.5, 1.4), V(0.9, 1.48, 1.1), V(-0.7, 1.2, -1.2), V(-0.7, 1.2, -1.2), 48); tag(ch, 'Madoff', BAD, -0.1); eff(wt(213), 'Haft', '150 Jahre', BAD); } }
   if (sh.id === 'loss') { scene = home; exp = 1.4; const Hm = home.userData; put(Hm.rosa, -0.4, 0, -1.55, 0.1); pose3(Hm.rosa, 'sadidle', t); sitPose(Hm.rosa, 0.5); Hm.rosa.userData.armL.rotation.x = Hm.rosa.userData.armR.rotation.x = -1.3; Hm.rosa.userData.setFace({ sad: true });
@@ -639,9 +641,9 @@ function render(frame) {
     mv(u, V(0.2, 1.8, 2.8), V(0.15, 1.75, 2.3), V(0, 1.05, -1.2), V(0, 1.05, -1.2), 48); tag(Hm.rosa, 'Anlegerin', HERO); eff(wt(180), 'Ersparnisse', '0 $', BAD); }
   if (sh.id === 'madoff') { scene = nyc; exp = 1.3; const Ny = nyc.userData; put(Ny.madoff, 0.5, 60.4, 2.0, 0.3); pose3(Ny.madoff, 'cross', t); mv(u, V(2.6, 62.4, 7.2), V(2.3, 62.3, 6.4), V(0, 61.6, 0), V(0, 61.6, 0), 50); tag(Ny.madoff, 'Bernie Madoff', BAD); info(wt(183), 'New York, Jahrzehnte später'); }
   if (sh.id === 'decades' || sh.id === 'bust') { scene = modern; exp = 1.25; const Md = modern.userData; reset([Md.madoff, Md.nv, Md.old, ...Md.agents]); Md.coin.visible = false;
-    if (sh.id === 'decades') { put(Md.madoff, 0, 0, -0.4, 0); pose3(Md.madoff, 'give', t); put(Md.nv, -1.5, 0, 0.7, 0.75); pose3(Md.nv, 'give', t, 1); put(Md.old, 1.5, 0, 0.7, -0.75); pose3(Md.old, 'give', t, 2);
-      const c = ((t - sh.a) / 1.1) % 1, P0 = V(-1.05, 1.05, 1.05), P1 = V(0, 1.15, 0.2), P2 = V(1.05, 1.05, 1.05); Md.coin.visible = true; Md.coin.position.copy(c < 0.5 ? P0.clone().lerp(P1, smoother(c * 2)) : P1.clone().lerp(P2, smoother(c * 2 - 1))); Md.coin.position.y += Math.sin((c * 2 % 1) * Math.PI) * 0.25;
-      mv(u, V(-2.2, 2.1, 4.6), V(-1.8, 2.05, 4.1), V(0, 1.15, 0.2), V(0, 1.15, 0.2), 48); tag(Md.madoff, 'Madoff', BAD); tag(Md.nv, 'Neuer Kunde', ALLY); tag(Md.old, 'Alte Kundin', HERO); }
+    if (sh.id === 'decades') { put(Md.madoff, 0, 0, -0.4, 0); pose3(Md.madoff, 'give', t); put(Md.nv, -1.05, 0, 0.7, 0.75); pose3(Md.nv, 'give', t, 1); put(Md.old, 1.05, 0, 0.7, -0.75); pose3(Md.old, 'give', t, 2);
+      const c = ((t - sh.a) / 1.1) % 1, P0 = V(-0.7, 1.05, 1.05), P1 = V(0, 1.15, 0.2), P2 = V(0.7, 1.05, 1.05); Md.coin.visible = true; Md.coin.position.copy(c < 0.5 ? P0.clone().lerp(P1, smoother(c * 2)) : P1.clone().lerp(P2, smoother(c * 2 - 1))); Md.coin.position.y += Math.sin((c * 2 % 1) * Math.PI) * 0.25;
+      mv(u, V(-1.6, 2.1, 6.4), V(-1.3, 2.05, 5.9), V(0, 1.2, 0.2), V(0, 1.2, 0.2), 48); tag(Md.madoff, 'Madoff', BAD); tag(Md.nv, 'Neuer Kunde', ALLY); tag(Md.old, 'Alte Kundin', HERO); }
     if (sh.id === 'bust') { put(Md.madoff, 0, 0, -1.0, 0.2); pose3(Md.madoff, t >= wt(203) ? 'raise' : 'idle', t); if (t >= wt(203)) { Md.madoff.userData.armR.rotation.x = Md.madoff.userData.armL.rotation.x = -2.9; Md.madoff.userData.setFace({ sad: true, smile: false }); }
       Md.agents.forEach((p, i) => { const k = smoother((t - wt(201) - i * 0.2) / 0.7); const x = i ? 2.4 : -2.2, z = lerp(3.4, 0.6, k); put(p, x, 0, z, facing(x, z, 0, -1.0)); pose3(p, k > 0 && k < 1 ? 'walk' : 'point', t, i); p.userData.setFace({ angry: true }); });
       mv(u, V(0.3, 2.0, 5.0), V(0.3, 1.95, 4.4), V(0, 1.2, -0.6), V(0, 1.2, -0.6), 50); tag(Md.madoff, 'Madoff', BAD); Md.agents.forEach(p => { if (p.position.z < 2.6) tag(p, 'FBI', ALLY); });
@@ -649,10 +651,10 @@ function render(frame) {
   }
   if (sh.id === 'crypto' || sh.id === 'warn') { scene = room; exp = 1.55; const R = room.userData; const { user } = R; R.uphone.visible = true; put(user, -1.4, 0.55, -1.0, 0.45); pose3(user, 'phone', t); sitPose(user, 0.6); R.phoneG.position.set(-1.1, 1.3, -0.6);
     user.userData.setFace(sh.id === 'warn' ? { angry: false, sad: false, smile: false } : { smile: true });
-    if (sh.id === 'crypto') { mv(u, V(0.6, 1.9, 2.4), V(0.4, 1.85, 1.9), V(-1.2, 1.2, -0.9), V(-1.2, 1.2, -0.9), 46); tag(user, 'Du', HERO); info(wt(216), 'Heute');
+    if (sh.id === 'crypto') { mv(u, V(0.9, 2.0, 3.0), V(0.7, 1.95, 2.6), V(-1.3, 1.2, -1.0), V(-1.3, 1.2, -1.0), 46); tag(user, 'Du', HERO); info(wt(216), 'Heute');
       say(wt(223), 'KryptoKing', BAD, 'Garantiert 30 % pro Monat!'); say(wt(225), 'Lisa', BAD, 'Komm in unseren Schenkkreis!'); }
     else { if (t >= wt(231)) { user.userData.armR.rotation.x = -0.4; R.uphone.visible = true; pose3(user, 'cross', t); sitPose(user, 0.6); R.uphone.visible = false; }
-      mv(u, V(-0.5, 1.6, 1.1), V(-0.6, 1.58, 0.8), V(-1.35, 1.35, -1.0), V(-1.35, 1.35, -1.0), 46); tag(user, 'Du', HERO);
+      mv(u, V(-0.4, 1.75, 1.9), V(-0.5, 1.72, 1.6), V(-1.4, 1.3, -1.0), V(-1.4, 1.3, -1.0), 46); tag(user, 'Du', HERO);
       tip(wt(227), 'warn', 'Warnzeichen', '#ff5555', [t >= wt(231) ? red('· hohe, „sichere“ Gewinne') : gray('…'), t >= wt(235) ? red('· Prämien fürs Anwerben') : ''].filter(Boolean)); }
   }
   if (sh.id === 'sign') { scene = dusk; exp = 1.35; if (!signDrawn) { drawSign(); signDrawn = true; } dusk.userData.ball.rotation.y = t * 0.2; mv(u, V(0, 3.5, 13.5), V(0, 3.6, 12.0), V(0, 0.5, 0), V(0, 0.6, 0), 46); }
