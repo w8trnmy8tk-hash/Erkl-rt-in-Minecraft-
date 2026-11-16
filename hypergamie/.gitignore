@@ -1,0 +1,9 @@
+node_modules/
+frames/
+test/
+*.jpg
+audio/ts_*.json
+audio/req_*.json
+test2/
+*.log
+audio/pre.wav
