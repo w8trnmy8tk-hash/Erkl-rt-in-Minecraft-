@@ -542,7 +542,7 @@ function drawSign() {
 const words = await (await fetch('words.json')).json();
 const wt = i => words[i][1];
 const SPEECH_END = 72.30; // hörbares Ende der Sprache (gemessen, −45 dB)
-const DUR = Math.round((SPEECH_END + 0.16) * 30) / 30;
+const DUR = Math.round((SPEECH_END + 0.23) * 30) / 30; // Stille am Loop-Übergang ≈ Satzpause (Sprache beginnt ohne Vorlauf)
 const WHIP0 = wt(1) - 1 / 30, WHIP1 = WHIP0 + 0.57; // wt(1) = hörbarer Einsatz „erklärt“ (erklaert-onset.py --fix)
 const CUTS = [[0, 'hero'], [4, 'chicago'], [8, 'prohib'], [11, 'capone'], [20, 'rich'], [28, 'dirty'], [37, 'nobody'], [48, 'court'], [53, 'cell'], [59, 'laundro'], [70, 'legend'],
   [80, 'today'], [87, 'case'], [96, 'bank'], [107, 'smurf'], [117, 'place'], [121, 'world'], [129, 'firms'], [137, 'mailbox'], [145, 'trace'], 
