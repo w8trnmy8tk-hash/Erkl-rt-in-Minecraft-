@@ -499,7 +499,7 @@ function drawSign() {
 // =====================================================================
 const words = await (await fetch('words.json')).json();
 const wt = i => words[i][1];
-const SPEECH_END = 73.38; // hörbares Ende der Sprache (gemessen, −45 dB)
+const SPEECH_END = 72.55; // hörbares Ende der Sprache (gemessen, −45 dB)
 const DUR = Math.round((SPEECH_END + 0.16) * 30) / 30;
 const WHIP0 = wt(1), WHIP1 = wt(1) + 0.57;
 const CUTS = [[0, 'hero'], [4, 'india'], [8, 'castes'], [16, 'tiers'], [27, 'priya'], [33, 'parents'], [43, 'higher'], [50, 'rise'], [57, 'nosay'], [63, 'laws'], [68, 'shame'], [74, 'term'],
