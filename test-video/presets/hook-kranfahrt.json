@@ -1,25 +1,81 @@
 {
   "name": "Hook – Two-Shot + durchgehende Kranfahrt (freigegeben)",
   "referenz": "To Kill a Mockingbird / Hamlet / The Crucible, 0–2.7 s",
-  "format": { "breite": 1080, "hoehe": 1920, "fps": 30, "render_aufloesung_faktor": 0.75 },
+  "format": {
+    "breite": 1080,
+    "hoehe": 1920,
+    "fps": 30,
+    "render_aufloesung_faktor": 0.75
+  },
   "ablauf": [
-    { "von": 0.00, "bis": 0.85, "shot": "Two-Shot auf Augenhöhe, 2 Figuren links/rechts mit Nametags, langsamer Push-in", "text": "[Titel]," },
-    { "von": 0.85, "bis": 1.42, "shot": "EINE durchgehende Kranfahrt nach hinten + oben + seitlich (links). KEIN Schnitt, KEIN Motion Blur", "text": "erklärt in" },
-    { "von": 1.42, "bis": 2.22, "shot": "hohe, seitliche Totale, Kamera treibt langsam weiter, Figur läuft klein durchs Bild", "text": "Minecraft." },
-    { "von": 2.22, "bis": 4.00, "shot": "harter Schnitt auf den Ortsnamen: Establishing-Totale + [Info]-Label", "text": "[Ort], [Jahr]." }
+    {
+      "von": 0.0,
+      "bis": 0.85,
+      "shot": "Two-Shot auf Augenhöhe, 2 Figuren links/rechts mit Nametags, langsamer Push-in",
+      "text": "[Titel],"
+    },
+    {
+      "von": 0.85,
+      "bis": 1.42,
+      "shot": "EINE durchgehende Kranfahrt nach hinten + oben + seitlich (links). KEIN Schnitt, KEIN Motion Blur",
+      "text": "erklärt in"
+    },
+    {
+      "von": 1.42,
+      "bis": 2.22,
+      "shot": "hohe, seitliche Totale, Kamera treibt langsam weiter, Figur läuft klein durchs Bild",
+      "text": "Minecraft."
+    },
+    {
+      "von": 2.22,
+      "bis": 4.0,
+      "shot": "harter Schnitt auf den Ortsnamen: Establishing-Totale + [Info]-Label",
+      "text": "[Ort], [Jahr]."
+    }
   ],
   "kamera": {
-    "start_position": [-0.85, 1.62, 2.1],
-    "push_in_ende_position": [-0.85, 1.58, 1.75],
-    "start_ziel": [-0.95, 1.05, -2.6],
+    "start_position": [
+      -0.85,
+      1.62,
+      2.1
+    ],
+    "push_in_ende_position": [
+      -0.85,
+      1.58,
+      1.75
+    ],
+    "start_ziel": [
+      -0.95,
+      1.05,
+      -2.6
+    ],
     "kranfahrt_start_s": 0.85,
     "kranfahrt_ende_s": 1.42,
     "kranfahrt_dauer_s": 0.57,
     "kurve": "smootherstep (6t^5 - 15t^4 + 10t^3) – weich an, weich aus",
     "bogen_nach_oben_m": 0.4,
-    "end_position": [-3.75, 10.0, 6.0],
-    "end_ziel": [-0.2, 0.2, -2.6],
-    "drift_danach_pro_s": { "position": [0.0, 0.048, 0.084], "ziel": [0.06, 0.0, 0.0] },
+    "end_position": [
+      -3.75,
+      10.0,
+      6.0
+    ],
+    "end_ziel": [
+      -0.2,
+      0.2,
+      -2.6
+    ],
+    "drift_danach_pro_s": {
+      "position": [
+        0.0,
+        0.048,
+        0.084
+      ],
+      "ziel": [
+        0.06,
+        0.0,
+        0.0
+      ]
+    },
     "fov_start_grad": 56,
     "fov_ende_grad": 46,
     "seitlicher_weg_m": 2.9,
@@ -47,7 +103,11 @@
   },
   "ui": {
     "nametag_schrift": "Pixelify Sans 600, 40px, Hintergrund rgba(0,0,0,.32)",
-    "farben": { "held": "#ffd23f", "verbuendete": "#55ffff", "antagonist": "#ff5555" },
+    "farben": {
+      "held": "#ffd23f",
+      "verbuendete": "#55ffff",
+      "antagonist": "#ff5555"
+    },
     "info_label": "[Info] in #ffd23f, Text weiß, oben links (left 28px, top 300px)"
   },
   "audio": {
@@ -56,5 +116,14 @@
     "sfx": "Whoosh zur Kranfahrt (0.88 s), leiser Whoosh zum Schnitt (2.1 s)",
     "lautheit": "-14 LUFS, True Peak -1.5 dB"
   },
-  "quelle": "test-video/scene.js (Shot 'hero'), freigegebenes Video: test-video/hook-4s-freigegeben.mp4"
+  "quelle": "test-video/scene.js (Shot 'hero'), freigegebenes Video: test-video/hook-4s-freigegeben.mp4",
+  "sprechtempo_referenz": {
+    "woerter_pro_minute": "196–207 (Ziel ~205)",
+    "pause_nach_komma_ms": "Ø 170–225 (Ziel ~190)",
+    "pause_nach_punkt_ms": "Ø 200–260, max ~450 (Ziel ~250)",
+    "wortdauer_ms": "Ø 250",
+    "laenge": "mindestens 60 s Sprache, ca. 200–210 Wörter",
+    "vorgehen": "ElevenLabs mit speed 1.18 erzeugen, dann Pausen mit presets/pausen-normalisieren.py kürzen (Ziel im Schnitt: 0.11 s nach Punkt, 0.09 s nach Komma – Whisper misst ca. +90 ms), danach mit Whisper gegen die Referenzwerte prüfen",
+    "messung_methode": "faster-whisper medium, word_timestamps, Lücke = Start(n+1) − Ende(n), getrennt nach Satzzeichen"
+  }
 }

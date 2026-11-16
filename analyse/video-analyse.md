@@ -247,3 +247,16 @@ Gespeichert in `test-video/presets/hook-kranfahrt.json`, Beispielvideo `test-vid
 - danach: hohe, seitliche Totale, Kamera treibt leicht weiter, Figur läuft klein durchs Bild.
 - Erst auf den Ortsnamen folgt der harte Schnitt zur Establishing-Totale mit `[Info]`-Label.
 - Look: kein Bloom, keine Tiefenunschärfe, keine Vignette, keine Partikel. Klar und weich beleuchtet.
+
+## 12. Sprechtempo und Pausen (gemessen, verbindlich)
+
+Gemessen mit Whisper-Wortzeiten an allen 4 Referenzen:
+
+| | V1 | V2 | V3 | V4 |
+|---|---|---|---|---|
+| Wörter/min | 207 | 196 | 201 | 202 |
+| Pause nach Komma (Ø) | 225 ms | 205 ms | 205 ms | 169 ms |
+| Pause nach Punkt (Ø / max) | 239 / 380 ms | 257 / 900 ms | 215 / 500 ms | 197 / 480 ms |
+| Wortdauer (Ø) | 249 ms | 255 ms | 252 ms | 263 ms |
+
+Vorgehen für eigene Videos: Stimme mit speed 1.18 erzeugen, Pausen mit `test-video/presets/pausen-normalisieren.py` kürzen, danach mit Whisper nachmessen. Mindestens 60 s Sprache (ca. 200–210 Wörter).

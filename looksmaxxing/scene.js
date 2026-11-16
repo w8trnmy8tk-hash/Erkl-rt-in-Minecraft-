@@ -212,7 +212,7 @@ const LEON = { skin: 0xe8b894, hair: 0x6a4422, hairVol: true, top: 0x6a6e78, bot
 const LEON_B = { ...LEON, hair: 0x3e2614, hairVol: false, sad: false, seed: 12 };
 const MIA = { skin: 0xf0c4a2, hair: 0x2a1a14, longHair: true, top: 0xe8b830, bottom: 0x2a3448, shoe: 0xf0f0f0, eye: '#3a2a1a', smile: true, seed: 13 };
 function hammerInHand(ch) { const h = new THREE.Group(); h.position.set(0, -0.68, 0.05); h.add(box(0.06, 0.06, 0.55, C(0x6a4a2a), 0, 0, 0.2)); h.add(box(0.14, 0.14, 0.3, C(0x6a6e74, { metal: 0.6, rough: 0.4 }), 0, 0, 0.48)); ch.userData.armR.add(h); }
-function dumbbell(ch, arm) { const d = new THREE.Group(); d.position.set(0, -0.7, 0); d.add(box(0.06, 0.06, 0.4, C(0x2a2a2a), 0, 0, 0)); d.add(box(0.16, 0.16, 0.08, C(0x3a3a3a), 0, 0, -0.18)); d.add(box(0.16, 0.16, 0.08, C(0x3a3a3a), 0, 0, 0.18)); ch.userData[arm].add(d); }
+function dumbbell(ch, arm) { const d = new THREE.Group(); (ch.userData.dbs ||= []).push(d); d.position.set(0, -0.7, 0); d.add(box(0.06, 0.06, 0.4, C(0x2a2a2a), 0, 0, 0)); d.add(box(0.16, 0.16, 0.08, C(0x3a3a3a), 0, 0, -0.18)); d.add(box(0.16, 0.16, 0.08, C(0x3a3a3a), 0, 0, 0.18)); ch.userData[arm].add(d); }
 
 // =====================================================================
 // SET 1: Stadt & Schulhof (Tag)
@@ -311,7 +311,7 @@ function drawScreen(mode, t) {
   c.fillStyle = '#121418'; c.fillRect(0, 0, 640, 400);
   c.fillStyle = '#b3201c'; c.fillRect(0, 0, 640, 44); c.fillStyle = '#ffffff'; c.font = '600 26px Pix'; c.fillText('looksmaxxing.forum', 320, 30);
   if (mode === 'forum' || mode === 'internet') {
-    const titleK = mode === 'forum' ? clamp01((t - 9.39) / 0.15) : 1;
+    const titleK = mode === 'forum' ? clamp01((t - wt(28)) / 0.15) : 1;
     c.globalAlpha = titleK; c.fillStyle = '#ffd23f'; c.font = '600 46px Pix'; c.fillText('LOOKSMAXXING', 320, 105); c.globalAlpha = 1;
     const posts = ['Mewing Guide v3', 'Rate me 1-10', 'Jawline Check', 'Softmaxxing Routine', 'Canthal Tilt?', 'Mog oder gemoggt?'];
     posts.forEach((p, i) => { c.fillStyle = i % 2 ? '#1c2028' : '#20252e'; c.fillRect(170, 130 + i * 42, 300, 36); c.fillStyle = '#c8d0dc'; c.font = '400 20px Pix'; c.fillText(p, 320, 155 + i * 42); });
@@ -319,8 +319,14 @@ function drawScreen(mode, t) {
   if (mode === 'more') { const f = Math.floor(t * 6) % 2; const lines = ['NOCH MEHR!', 'MEWING 24/7', 'HARDMAXXING', 'NIE GENUG']; lines.forEach((l, i) => { c.fillStyle = (i + f) % 2 ? '#ff4040' : '#ff8a8a'; c.font = '600 38px Pix'; c.fillText(l, 320, 110 + i * 70 - ((t * 40) % 70)); }); }
   if (mode === 'rate') { const sc = ['3/10', '5/10', '7/10', '4/10', '6/10', '2/10'], skins = ['#e8b894', '#c89a72', '#f0c4a2', '#8a5a3a', '#e0a882', '#d8b090'], hairs = ['#2a1a14', '#6a4422', '#b8925a', '#1a1a1a', '#5a3a2a', '#8a5a2a'];
     for (let i = 0; i < 6; i++) { const x = 230 + (i % 2) * 110, y = 70 + Math.floor(i / 2) * 105; c.fillStyle = skins[i]; c.fillRect(x, y, 70, 70); c.fillStyle = hairs[i]; c.fillRect(x, y, 70, 18); c.fillStyle = '#fff'; c.fillRect(x + 10, y + 34, 16, 8); c.fillRect(x + 44, y + 34, 16, 8); c.fillStyle = '#222'; c.fillRect(x + 18, y + 34, 8, 8); c.fillRect(x + 44, y + 34, 8, 8); c.fillStyle = '#8a4a40'; c.fillRect(x + 26, y + 54, 18, 6);
-      if (t > 27.9 + i * 0.35) { c.fillStyle = 'rgba(0,0,0,.65)'; c.fillRect(x, y + 72, 70, 24); c.fillStyle = parseInt(sc[i]) < 5 ? '#ff5555' : '#55ff55'; c.font = '600 22px Pix'; c.fillText(sc[i], x + 35, y + 91); } } }
-  if (mode === 'delete') { const done = t >= 50.66; c.fillStyle = '#20252e'; c.fillRect(170, 120, 300, 170); c.fillStyle = '#ffffff'; c.font = '600 26px Pix';
+      if (t > wt(81) + 0.3 + i * 0.3) { c.fillStyle = 'rgba(0,0,0,.65)'; c.fillRect(x, y + 72, 70, 24); c.fillStyle = parseInt(sc[i]) < 5 ? '#ff5555' : '#55ff55'; c.font = '600 22px Pix'; c.fillText(sc[i], x + 35, y + 91); } } }
+  if (mode === 'canthal') { c.fillStyle = '#e8b894'; c.fillRect(220, 70, 200, 200); c.fillStyle = '#6a4422'; c.fillRect(220, 70, 200, 45); c.fillStyle = '#fff'; c.fillRect(245, 150, 50, 20); c.fillRect(345, 150, 50, 20); c.fillStyle = '#2a3a5a'; c.fillRect(265, 150, 20, 20); c.fillRect(350, 150, 20, 20);
+    c.strokeStyle = '#ff4040'; c.lineWidth = 4; c.beginPath(); c.moveTo(232, 168); c.lineTo(305, 148); c.moveTo(335, 148); c.lineTo(408, 168); c.stroke(); c.fillStyle = '#ffd23f'; c.font = '600 26px Pix'; c.fillText('Canthal Tilt: -3°', 320, 320); c.fillStyle = '#ff5555'; c.font = '400 22px Pix'; c.fillText('„negativ“', 320, 355); }
+  if (mode === 'scale') { for (let i = 1; i <= 10; i++) { const k = clamp01((t - wt(89) - i * 0.12) / 0.15); c.globalAlpha = k; const x = 150 + (i - 1) * 38; c.fillStyle = `hsl(${(i - 1) * 12},75%,50%)`; c.fillRect(x, 230 - i * 12, 30, 40 + i * 12); c.fillStyle = '#fff'; c.font = '600 20px Pix'; c.fillText(String(i), x + 15, 300); } c.globalAlpha = 1; c.fillStyle = '#ffd23f'; c.font = '600 30px Pix'; c.fillText('DEINE BEWERTUNG', 320, 95); }
+  if (mode === 'mog') { const face = (x, sk, hr, jaw) => { c.fillStyle = sk; c.fillRect(x, 110, 130, 130 + jaw); c.fillStyle = hr; c.fillRect(x, 110, 130, 30); c.fillStyle = '#fff'; c.fillRect(x + 18, 170, 30, 14); c.fillRect(x + 82, 170, 30, 14); c.fillStyle = '#222'; c.fillRect(x + 30, 170, 14, 14); c.fillRect(x + 86, 170, 14, 14); c.fillStyle = '#8a4a40'; c.fillRect(x + 45, 215 + jaw * 0.5, 40, 8); };
+    face(160, '#e8b894', '#3e2614', 0); face(350, '#e0a882', '#1a1a1a', 22); c.fillStyle = '#fff'; c.font = '600 24px Pix'; c.fillText('4/10', 225, 300); c.fillText('9/10', 415, 300);
+    if (t >= wt(106)) { c.fillStyle = '#ff3030'; c.font = '600 54px Pix'; c.save(); c.translate(320, 200); c.rotate(-0.15); c.fillText('MOGGED', 0, 0); c.restore(); } }
+  if (mode === 'delete') { const done = t >= wt(178); c.fillStyle = '#20252e'; c.fillRect(170, 120, 300, 170); c.fillStyle = '#ffffff'; c.font = '600 26px Pix';
     c.fillText(done ? 'Account gelöscht' : 'Account löschen?', 320, 175); c.fillStyle = done ? '#55ff55' : '#b3201c'; c.fillRect(250, 210, 140, 48); c.fillStyle = '#fff'; c.font = '600 24px Pix'; c.fillText(done ? '✓' : 'Löschen', 320, 242); }
   screenTex.needsUpdate = true;
 }
@@ -394,19 +400,16 @@ function drawSign() {
 }
 
 // =====================================================================
-// Timeline
+// Timeline – alles an Wörtern verankert (words.json mit referenzgleichem Timing)
 // =====================================================================
 const words = await (await fetch('words.json')).json();
-const DUR = 57.9;
-const WHIP0 = 1.16, WHIP1 = 1.73; // Kranfahrt-Preset: startet auf „erklärt“, Dauer 0,57 s
-const S = (a, b, id) => ({ a, b, id });
-const SHOTS = [
-  S(0, 2.60, 'hero'), S(2.60, 5.35, 'internet'), S(5.35, 7.87, 'sad'), S(7.87, 10.60, 'forum'), S(10.60, 13.85, 'idea'),
-  S(13.85, 15.95, 'sport'), S(15.95, 16.55, 'skin'), S(16.55, 17.18, 'sleep'), S(17.18, 18.50, 'hair'), S(18.50, 19.97, 'works'),
-  S(19.97, 21.92, 'more'), S(21.92, 25.30, 'mew'), S(25.30, 27.63, 'jaw'), S(27.63, 30.62, 'rate'), S(30.62, 34.55, 'smash'),
-  S(34.55, 38.12, 'doctor'), S(38.12, 42.92, 'mirror'), S(42.92, 45.22, 'mia'), S(45.22, 47.42, 'mia2'), S(47.42, 49.77, 'mia3'),
-  S(49.77, 51.27, 'delete'), S(51.27, 53.27, 'jog'), S(53.27, 56.38, 'sign'), S(56.38, 57.90, 'loop'),
-];
+const wt = i => words[i][1];
+const DUR = 60.2;
+const WHIP0 = wt(1), WHIP1 = wt(1) + 0.57; // Kranfahrt-Preset: startet auf „erklärt“, Dauer 0,57 s
+const CUTS = [[0, 'hero'], [4, 'internet'], [7, 'sad'], [14, 'flaws'], [23, 'forum'], [29, 'idea'], [38, 'sport'], [42, 'skin'], [43, 'sleep'], [44, 'hair'],
+  [47, 'works'], [50, 'happy'], [58, 'more'], [63, 'mew'], [73, 'jaw'], [77, 'measure'], [81, 'rate'], [89, 'scale'], [99, 'four'], [103, 'mog'],
+  [111, 'smash'], [129, 'doctor'], [137, 'mirror'], [153, 'mia'], [163, 'mia2'], [170, 'mia3'], [175, 'delete'], [179, 'jog'], [184, 'morning'], [191, 'sign'], [199, 'loop']];
+const SHOTS = CUTS.map(([i, id], k) => ({ a: i === 0 ? 0 : wt(i) - 0.07, b: k + 1 < CUTS.length ? wt(CUTS[k + 1][0]) - 0.07 : DUR, id }));
 function cam(p, t, fov) { camera.position.copy(p); camera.lookAt(t); camera.fov = fov; }
 const mv = (u, a, b, ta, tb, fov) => cam(a.clone().lerp(b, u), ta.clone().lerp(tb, u), fov);
 function heroCam(t) { // Preset hook-kranfahrt.json
@@ -419,10 +422,13 @@ function heroCam(t) { // Preset hook-kranfahrt.json
 }
 const capEl = document.getElementById('cap'), tagsEl = document.getElementById('tags'), chatEl = document.getElementById('chat'), extraEl = document.getElementById('extra');
 let signDrawn = false;
-
-function roomLight(night) { const R = room.userData; R.sun.intensity = night ? 0.35 : 1.6; R.hemi.intensity = night ? 0.28 : 1.1; R.lamp.intensity = night ? 0 : 6; R.winM.color.set(night ? 0x0e1630 : 0x4a6aa0); R.scrL.intensity = night ? 5 : 2.5; }
+function roomLight(mode) { const R = room.userData; const night = mode === 'night', morning = mode === 'morning';
+  R.sun.intensity = night ? 0.35 : morning ? 3.2 : 1.6; R.sun.color.set(morning ? 0xffe2b0 : 0xb8c8ff); R.hemi.intensity = night ? 0.28 : morning ? 1.4 : 1.1; R.lamp.intensity = night || morning ? 0 : 6;
+  R.winM.color.set(night ? 0x0e1630 : morning ? 0xffe6c0 : 0x4a6aa0); R.scrL.intensity = night ? 5 : morning ? 0 : 2.5; }
 function showLeon(which) { const R = room.userData; [R.A, R.B, R.rA, R.rB].forEach(o => o.visible = false); if (which === 'A') { R.A.visible = R.rA.visible = true; } if (which === 'B') { R.B.visible = R.rB.visible = true; } }
 function atMirror(L, rL, kind, t) { L.position.set(2.0, 0, -2.75); L.rotation.set(0, Math.PI, 0); rL.position.set(2.0, 0, -5.25); rL.rotation.set(0, 0, 0); pose2(L, kind, t); pose2(rL, kind, t); }
+const MIRROR_CAM = u => mv(u, V(2.95, 1.78, -1.15), V(2.85, 1.75, -1.55), V(2.05, 1.5, -4.6), V(2.05, 1.5, -4.6), 46);
+const MIRROR_CLOSE = u => mv(u, V(2.75, 1.78, -1.75), V(2.65, 1.76, -2.05), V(2.05, 1.55, -4.8), V(2.05, 1.55, -4.8), 42);
 
 function render(frame) {
   const t = frame / FPS;
@@ -432,82 +438,86 @@ function render(frame) {
   const tag = (ch, text, color, extra = 0) => ui.tags.push([tagPos(ch, extra), text, color]);
   const chat = (t0, html) => { if (t >= t0) ui.chat.push(`<div style="opacity:${clamp01((t - t0) / 0.1)}">${html}</div>`); };
   const info = (t0, text) => chat(t0, `<span style="color:#ffd23f">[Info]</span> ${text}`);
-  const R = room.userData;
+  const soft = () => { chat(wt(41), '<span style="color:#55ff55">[Softmaxxing]</span> Sport'); chat(wt(42), '<span style="color:#55ff55">[Softmaxxing]</span> Hautpflege'); chat(wt(43), '<span style="color:#55ff55">[Softmaxxing]</span> Schlaf'); chat(wt(46), '<span style="color:#55ff55">[Softmaxxing]</span> Haarschnitt'); };
+  const R = room.userData; (R.A.userData.dbs || []).forEach(d => d.visible = sh.id === 'sport');
 
   // --- Schulhof / Stadt ---
-  if (['hero', 'loop', 'mia', 'mia2', 'mia3', 'jog'].includes(sh.id)) {
+  if (['hero', 'loop', 'mia', 'mia2', 'mia3', 'jog', 'happy'].includes(sh.id)) {
     scene = town; exp = 1.35; const { leon, mia, students, passer, hearts } = town.userData;
-    students.forEach((s, i) => pose2(s, 'idle', t, i));
-    updateBurst(hearts, -1);
+    students.forEach((s, i) => pose2(s, 'idle', t, i)); updateBurst(hearts, -1); leon.userData.setFace({ smile: true });
     if (sh.id === 'hero' || sh.id === 'loop') {
       leon.position.set(-0.75, 0, 0); leon.rotation.y = 0.15; mia.position.set(0.75, 0, 0.1); mia.rotation.y = -0.3;
       pose2(leon, 'idle', t); pose2(mia, 'idle', t, 2); mia.userData.head.rotation.y = -0.45;
-      const pw = sh.id === 'hero' ? Math.max(0, t - 1.2) : 0; passer.position.set(2.4, 0, -8 + pw * 2.2); passer.rotation.y = 0; pose2(passer, 'walk', t);
+      const pw = sh.id === 'hero' ? Math.max(0, t - 1.0) : 0; passer.position.set(2.4, 0, -8 + pw * 2.2); passer.rotation.y = 0; pose2(passer, 'walk', t);
       heroCam(sh.id === 'hero' ? t : t - DUR); tag(leon, 'Leon', '#ffd23f'); tag(mia, 'Mia', '#55ffff');
     } else {
       passer.position.set(-40, 0, 0);
       leon.position.set(8, 0, -4); leon.rotation.y = -Math.PI / 2;
-      if (sh.id === 'mia') { const k = smoother((t - 42.92) / 1.5); mia.position.set(lerp(3.2, 6.6, k), 0, -4); mia.rotation.y = Math.PI / 2; pose2(mia, k < 1 ? 'walk' : 'idle', t); pose2(leon, 'sadidle', t); leon.userData.head.rotation.y = -0.4 * k;
+      if (sh.id === 'happy') { const lx = -6 + (t - sh.a) * 1.8; leon.position.set(lx, 0, 4); leon.rotation.y = Math.PI / 2; pose2(leon, 'walk', t); mia.position.set(-60, 0, 0);
+        cam(V(lx + 3.2, 1.6, 8.2), V(lx + 0.4, 1.3, 4), 48); tag(leon, 'Leon', '#ffd23f');
+        if (t >= wt(57)) ui.eff = { o: clamp01((t - wt(57)) / 0.15), name: 'Selbstvertrauen', time: '0:30', col: '#55ff55' }; }
+      if (sh.id === 'mia') { const k = smoother((t - sh.a) / 1.4); mia.position.set(lerp(3.2, 6.6, k), 0, -4); mia.rotation.y = Math.PI / 2; pose2(mia, k < 1 ? 'walk' : 'idle', t); leon.userData.setFace({ sad: true }); pose2(leon, 'sadidle', t); leon.userData.head.rotation.y = -0.4 * k;
         mv(u, V(5.6, 1.65, 1.6), V(5.9, 1.6, 1.0), V(6.2, 1.25, -4), V(6.6, 1.25, -4), 50); tag(leon, 'Leon', '#ffd23f'); tag(mia, 'Mia', '#55ffff');
-        chat(44.13, '<span style="color:#55ffff">&lt;Mia&gt;</span> Kommst du mit?'); }
+        chat(wt(160), '<span style="color:#55ffff">&lt;Mia&gt;</span> Kommst du mit?'); }
       if (sh.id === 'mia2' || sh.id === 'mia3') { mia.position.set(6.6, 0, -4); mia.rotation.y = Math.PI / 2; pose2(mia, sh.id === 'mia3' ? 'laugh' : 'idle', t, 1); pose2(leon, sh.id === 'mia3' ? 'laugh' : 'idle', t); }
-      if (sh.id === 'mia2') { mv(u, V(8.6, 1.72, -3.3), V(8.4, 1.72, -3.45), V(6.6, 1.62, -4.05), V(6.6, 1.62, -4.05), 44); tag(mia, 'Mia', '#55ffff'); chat(44.13, '<span style="color:#55ffff">&lt;Mia&gt;</span> Kommst du mit?'); }
+      if (sh.id === 'mia2') { mv(u, V(8.6, 1.72, -3.3), V(8.4, 1.72, -3.45), V(6.6, 1.62, -4.05), V(6.6, 1.62, -4.05), 44); tag(mia, 'Mia', '#55ffff'); chat(wt(160), '<span style="color:#55ffff">&lt;Mia&gt;</span> Kommst du mit?'); }
       if (sh.id === 'mia3') { mia.rotation.y = Math.PI / 2 - 0.7; leon.rotation.y = -Math.PI / 2 + 0.7; mv(u, V(7.3, 1.65, 1.4), V(7.3, 1.6, 0.8), V(7.3, 1.35, -4), V(7.3, 1.35, -4), 46); tag(leon, 'Leon', '#ffd23f'); tag(mia, 'Mia', '#55ffff');
-        hearts.position.set(7.3, 2.2, -4); updateBurst(hearts, t - 48.09, 1.6, 1.6); }
-      if (sh.id === 'jog') { const lx = -14 + (t - 51.27) * 4.2; leon.position.set(lx, 0, 19.5); leon.rotation.y = Math.PI / 2; pose2(leon, 'jog', t); mia.position.set(-60, 0, 0);
+        hearts.position.set(7.3, 2.2, -4); updateBurst(hearts, t - wt(173), 1.6, 1.6); }
+      if (sh.id === 'jog') { const lx = -14 + (t - sh.a) * 4.2; leon.position.set(lx, 0, 19.5); leon.rotation.y = Math.PI / 2; pose2(leon, 'jog', t); mia.position.set(-60, 0, 0);
         cam(V(lx + 2.2, 1.6, 24.5), V(lx + 0.6, 1.1, 19.5), 50); tag(leon, 'Leon', '#ffd23f'); }
     }
   }
   // --- Zimmer ---
-  const roomShots = ['internet', 'sad', 'forum', 'idea', 'sport', 'skin', 'sleep', 'works', 'more', 'mew', 'jaw', 'rate', 'mirror', 'delete'];
+  const roomShots = ['internet', 'sad', 'flaws', 'forum', 'idea', 'sport', 'skin', 'sleep', 'works', 'more', 'mew', 'jaw', 'measure', 'rate', 'scale', 'four', 'mog', 'mirror', 'delete', 'morning'];
   if (roomShots.includes(sh.id)) {
-    scene = room; exp = 1.45; R.drawClock(sh.id === 'mirror' ? (t - 38.12) * 12 : 15);
-    const night = ['internet', 'forum', 'idea', 'more', 'rate', 'delete', 'sleep'].includes(sh.id); roomLight(night);
+    scene = room; exp = 1.45; R.drawClock(sh.id === 'mirror' ? (t - sh.a) * 14 : sh.id === 'morning' ? -60 : 15);
+    const mode = ['internet', 'forum', 'idea', 'more', 'measure', 'rate', 'scale', 'mog', 'delete', 'sleep'].includes(sh.id) ? 'night' : sh.id === 'morning' ? 'morning' : 'eve'; roomLight(mode);
     R.blanket.visible = sh.id === 'sleep';
-    const screenMode = { internet: 'internet', forum: 'forum', idea: 'forum', more: 'more', rate: 'rate', delete: 'delete' }[sh.id] || 'forum'; drawScreen(screenMode, t);
+    const screenMode = { internet: 'internet', forum: 'forum', idea: 'forum', more: 'more', measure: 'canthal', rate: 'rate', scale: 'scale', mog: 'mog', delete: 'delete' }[sh.id] || 'forum'; drawScreen(screenMode, t);
     const atDesk = (L) => { L.position.set(-2.2, 0, -2.45); L.rotation.set(0, Math.PI, 0); pose2(L, 'type', t); sitPose(L, 0.55); };
-    if (sh.id === 'internet') { showLeon('A'); R.rA.visible = false; atDesk(R.A); mv(u, V(1.2, 2.4, 3.6), V(0.2, 2.1, 2.2), V(-2.2, 1.35, -3.5), V(-2.2, 1.4, -3.5), 50); info(2.91, 'Das Internet, 2024'); }
-    if (sh.id === 'sad') { showLeon('A'); atMirror(R.A, R.rA, 'sadidle', t); mv(u, V(2.95, 1.78, -1.15), V(2.85, 1.75, -1.55), V(2.05, 1.5, -4.6), V(2.05, 1.5, -4.6), 46); tag(R.rA, 'Leon', '#ffd23f');
-      if (t >= 6.94) ui.eff = { o: clamp01((t - 6.94) / 0.15), name: 'Unsicherheit', time: '∞', col: '#ff5555' }; }
-    if (sh.id === 'forum' || sh.id === 'more' || sh.id === 'rate' || sh.id === 'delete') { showLeon('none'); atDesk(R.A);
-      mv(u, V(-2.2, 1.6, -2.15), V(-2.2, 1.6, -2.55), V(-2.2, 1.6, -3.62), V(-2.2, 1.6, -3.62), 46);
-      if (sh.id === 'rate') { chat(28.27, '<span style="color:#ffd23f">&lt;Leon&gt;</span> 4/10. Und ich?'); }
-      if (sh.id === 'delete') chat(50.66, '<span style="color:#ffff55">Leon hat das Forum verlassen</span>'); }
+    const SCREEN_CAM = () => mv(u, V(-2.2, 1.6, -2.15), V(-2.2, 1.6, -2.55), V(-2.2, 1.6, -3.62), V(-2.2, 1.6, -3.62), 46);
+    if (sh.id === 'internet') { showLeon('A'); R.rA.visible = false; atDesk(R.A); mv(u, V(1.2, 2.4, 3.6), V(0.2, 2.1, 2.2), V(-2.2, 1.35, -3.5), V(-2.2, 1.4, -3.5), 50); info(wt(5), 'Das Internet, 2024'); }
+    if (sh.id === 'sad' || sh.id === 'flaws' || sh.id === 'four') { showLeon(sh.id === 'four' ? 'B' : 'A'); const L = sh.id === 'four' ? R.B : R.A, rL = sh.id === 'four' ? R.rB : R.rA;
+      L.userData.setFace({ sad: true }); rL.userData.setFace({ sad: true }); atMirror(L, rL, 'sadidle', t);
+      if (sh.id === 'sad') { MIRROR_CAM(u); tag(rL, 'Leon', '#ffd23f'); if (t >= wt(13)) ui.eff = { o: clamp01((t - wt(13)) / 0.15), name: 'Unsicherheit', time: '∞', col: '#ff5555' }; }
+      if (sh.id === 'flaws') { MIRROR_CLOSE(u); tag(rL, 'Leon', '#ffd23f'); ui.eff = { o: 1, name: 'Unsicherheit', time: '∞', col: '#ff5555' };
+        chat(wt(15), '<span style="color:#ff5555">✗</span> Augen: zu klein'); chat(wt(18), '<span style="color:#ff5555">✗</span> Kinn: zu weich'); chat(wt(21), '<span style="color:#ff5555">✗</span> Haut: zu viele Pickel'); }
+      if (sh.id === 'four') { MIRROR_CLOSE(u); const k = t >= wt(102); tag(rL, k ? 'Leon · 4/10' : 'Leon', k ? '#ff5555' : '#ffd23f'); } }
+    if (['forum', 'more', 'measure', 'rate', 'scale', 'mog', 'delete'].includes(sh.id)) { showLeon('none'); atDesk(R.A); SCREEN_CAM();
+      if (sh.id === 'rate') chat(wt(85), '<span style="color:#ffd23f">&lt;Leon&gt;</span> Und ich?');
+      if (sh.id === 'mog') chat(wt(106), '<span style="color:#ff5555">&lt;Forum&gt;</span> Du wurdest gemoggt.');
+      if (sh.id === 'delete') chat(wt(178), '<span style="color:#ffff55">Leon hat das Forum verlassen</span>'); }
     if (sh.id === 'idea') { showLeon('A'); R.rA.visible = false; atDesk(R.A); mv(u, V(-0.95, 1.65, -3.3), V(-1.1, 1.62, -3.2), V(-2.2, 1.5, -2.45), V(-2.2, 1.5, -2.45), 50); tag(R.A, 'Leon', '#ffd23f');
-      chat(11.56, '<span style="color:#ff5555">&lt;Forum&gt;</span> Hol das Maximum aus deinem Aussehen raus!'); }
-    if (sh.id === 'sport') { showLeon('A'); R.rA.visible = false; R.A.position.set(0, 0, -1); R.A.rotation.set(0, 0.25, 0); pose2(R.A, 'curl', t); mv(u, V(0.7, 1.6, 2.5), V(0.55, 1.5, 1.8), V(0, 1.15, -1), V(0, 1.15, -1), 50); tag(R.A, 'Leon', '#ffd23f');
-      chat(14.46, '<span style="color:#55ff55">[Softmaxxing]</span> Sport'); }
-    if (sh.id === 'skin') { showLeon('A'); R.rA.visible = false; R.A.position.set(-3.0, 0, 0.6); R.A.rotation.set(0, -Math.PI / 2, 0); pose2(R.A, 'cream', t); mv(u, V(-1.6, 1.7, 1.9), V(-1.75, 1.68, 1.7), V(-3.0, 1.5, 0.6), V(-3.0, 1.5, 0.6), 46);
-      chat(14.46, '<span style="color:#55ff55">[Softmaxxing]</span> Sport'); chat(16.03, '<span style="color:#55ff55">[Softmaxxing]</span> Hautpflege'); }
+      chat(wt(31), '<span style="color:#ff5555">&lt;Forum&gt;</span> Hol das Maximum aus deinem Aussehen raus!'); }
+    if (sh.id === 'sport') { showLeon('A'); R.rA.visible = false; R.A.position.set(0, 0, -1); R.A.rotation.set(0, 0.25, 0); pose2(R.A, 'curl', t); mv(u, V(0.7, 1.6, 2.5), V(0.55, 1.5, 1.8), V(0, 1.15, -1), V(0, 1.15, -1), 50); tag(R.A, 'Leon', '#ffd23f'); soft(); }
+    if (sh.id === 'skin') { showLeon('A'); R.rA.visible = false; R.A.position.set(-2.7, 0, 0.9); R.A.rotation.set(0, 0.3, 0); pose2(R.A, 'cream', t); mv(u, V(-2.0, 1.85, 3.3), V(-2.1, 1.8, 3.0), V(-2.65, 1.45, 0.9), V(-2.65, 1.45, 0.9), 46); tag(R.A, 'Leon', '#ffd23f'); soft();
+      ui.tip = { o: 1, icon: 'cream', title: 'Hautcreme', titleCol: '#55ffff', lines: ['<span style="color:#aaaaaa">Morgens &amp; abends</span>'] }; }
     if (sh.id === 'sleep') { showLeon('A'); R.rA.visible = false; const L = R.A; pose(L, 'idle', 0); L.rotation.set(-Math.PI / 2, 0, 0); L.position.set(2.85, 0.68, 2.25); L.userData.armL.rotation.x = L.userData.armR.rotation.x = 0;
-      mv(u, V(1.4, 2.3, 3.6), V(1.5, 2.2, 3.4), V(2.85, 0.8, 0.9), V(2.85, 0.8, 0.9), 50);
-      chat(14.46, '<span style="color:#55ff55">[Softmaxxing]</span> Sport'); chat(16.03, '<span style="color:#55ff55">[Softmaxxing]</span> Hautpflege'); chat(16.63, '<span style="color:#55ff55">[Softmaxxing]</span> Schlaf');
-      ui.tags.push([V(2.85, 1.3 + ((t * 0.8) % 0.4), 0.45), 'z Z z', '#ffffff']); }
-    if (sh.id === 'works' || sh.id === 'jaw' || sh.id === 'mirror') { showLeon('B');
-      const happy = sh.id === 'works'; R.B.userData.setFace({ smile: happy, sad: sh.id === 'mirror' }); R.rB.userData.setFace({ smile: happy, sad: sh.id === 'mirror' });
+      mv(u, V(1.4, 2.3, 3.6), V(1.5, 2.2, 3.4), V(2.85, 0.8, 0.9), V(2.85, 0.8, 0.9), 50); soft(); ui.tags.push([V(2.85, 1.3 + ((t * 0.8) % 0.4), 0.45), 'z Z z', '#ffffff']); }
+    if (['works', 'jaw', 'mirror', 'morning'].includes(sh.id)) { showLeon('B');
+      const happy = sh.id === 'works' || sh.id === 'morning'; R.B.userData.setFace({ smile: happy, sad: sh.id === 'mirror' }); R.rB.userData.setFace({ smile: happy, sad: sh.id === 'mirror' });
       atMirror(R.B, R.rB, sh.id === 'mirror' ? 'sadidle' : 'idle', t); tag(R.rB, 'Leon', '#ffd23f');
-      if (sh.id === 'works') { mv(u, V(2.95, 1.78, -1.15), V(2.85, 1.75, -1.55), V(2.05, 1.5, -4.6), V(2.05, 1.5, -4.6), 46);
-        if (t >= 18.84) ui.toast = { x: lerp(640, 0, smoother((t - 18.84) / 0.18)), t1: 'Fortschritt erzielt!', t2: 'Softmaxxing' }; }
-      if (sh.id === 'jaw') { mv(u, V(2.85, 1.78, -1.6), V(2.75, 1.76, -1.95), V(2.05, 1.55, -4.8), V(2.05, 1.55, -4.8), 42);
-        if (t >= 26.22) ui.tip = { o: clamp01((t - 26.22) / 0.1), icon: 'jaw', title: 'Kieferlinie', titleCol: '#ffffff', lines: ['<span style="color:#ffaa00">Bewertung: 6/10</span>', '<span style="color:#aaaaaa">Forum: „Nicht genug“</span>'] }; }
+      if (sh.id === 'works') { MIRROR_CAM(u); if (t >= wt(49)) ui.toast = { x: lerp(640, 0, smoother((t - wt(49)) / 0.18)), t1: 'Fortschritt erzielt!', t2: 'Softmaxxing' }; }
+      if (sh.id === 'jaw') { MIRROR_CLOSE(u);
+        if (t >= wt(76)) ui.tip = { o: clamp01((t - wt(76)) / 0.1), icon: 'jaw', title: 'Kieferlinie', titleCol: '#ffffff', lines: ['<span style="color:#ffaa00">Bewertung: 6/10</span>', '<span style="color:#aaaaaa">Forum: „Nicht genug“</span>'] }; }
       if (sh.id === 'mirror') { mv(u, V(3.3, 2.1, 0.4), V(3.0, 1.85, -0.9), V(1.6, 1.6, -4.2), V(1.9, 1.5, -4.5), 50);
-        info(39.67, '60 Minuten vor dem Spiegel'); if (t >= 41.22) ui.eff = { o: clamp01((t - 41.22) / 0.15), name: 'Unsicherheit II', time: '∞', col: '#ff5555' }; }
+        info(wt(142), '60 Minuten vor dem Spiegel'); if (t >= wt(149)) ui.eff = { o: clamp01((t - wt(149)) / 0.15), name: 'Unsicherheit II', time: '∞', col: '#ff5555' }; }
+      if (sh.id === 'morning') { MIRROR_CAM(u); info(wt(190), '7:00 Uhr – kurzer Blick, fertig'); }
     }
     if (sh.id === 'mew') { showLeon('B'); R.rB.visible = false; R.B.userData.setFace({ smile: false }); R.B.position.set(0, 0, -1); R.B.rotation.set(0, Math.PI / 2, 0); pose2(R.B, 'idle', t); R.B.userData.head.rotation.x = -0.12;
       mv(u, V(1.5, 1.8, 0.1), V(1.3, 1.78, -0.1), V(0.0, 1.6, -1), V(0.0, 1.6, -1), 44); tag(R.B, 'Leon', '#ffd23f');
-      if (t >= 22.66) ui.tip = { o: clamp01((t - 22.66) / 0.1), icon: 'tongue', title: 'Mewing', titleCol: '#ffaa00', lines: ['<span style="color:#aaaaaa">Zunge dauerhaft an den Gaumen</span>', '<span style="color:#aaaaaa">Ziel: schärfere Kieferlinie</span>'] }; }
+      if (t >= wt(65)) ui.tip = { o: clamp01((t - wt(65)) / 0.1), icon: 'tongue', title: 'Mewing', titleCol: '#ffaa00', lines: ['<span style="color:#aaaaaa">Zunge dauerhaft an den Gaumen</span>', '<span style="color:#aaaaaa">Ziel: schärfere Kieferlinie</span>'] }; }
   }
-  if (sh.id === 'hair') { scene = barber; exp = 1.3; const B = barber.userData; const cut = t >= 17.72; B.before.visible = !cut; B.after.visible = cut;
+  if (sh.id === 'hair') { scene = barber; exp = 1.3; const B = barber.userData; const cut = t >= wt(46); B.before.visible = !cut; B.after.visible = cut;
     for (const ch of [B.before, B.after]) { pose2(ch, 'idle', t); sitPose(ch, 1.0); ch.userData.armL.rotation.x = ch.userData.armR.rotation.x = -0.4; }
-    pose2(B.bb, 'snip', t); updateBurst(B.hairBits, t - 17.72, 2.5, 0.8);
-    mv(u, V(0.4, 1.95, 3.0), V(0.3, 1.9, 2.5), V(0, 1.75, 0), V(0, 1.75, 0), 46); tag(cut ? B.after : B.before, 'Leon', '#ffd23f');
-    chat(14.46, '<span style="color:#55ff55">[Softmaxxing]</span> Sport'); chat(16.03, '<span style="color:#55ff55">[Softmaxxing]</span> Hautpflege'); chat(16.63, '<span style="color:#55ff55">[Softmaxxing]</span> Schlaf'); chat(17.72, '<span style="color:#55ff55">[Softmaxxing]</span> Haarschnitt'); }
-  if (sh.id === 'smash') { scene = dark; exp = 1.3; const G = dark.userData.guy; pose2(G, 'raise', t, 30.8); dark.userData.bulb.intensity = 6 + Math.sin(t * 23) * 0.6 + (Math.sin(t * 7.3) > 0.97 ? -3 : 0);
+    pose2(B.bb, 'snip', t); updateBurst(B.hairBits, t - wt(46), 2.5, 0.8);
+    mv(u, V(0.4, 1.95, 3.0), V(0.3, 1.9, 2.5), V(0, 1.75, 0), V(0, 1.75, 0), 46); tag(cut ? B.after : B.before, 'Leon', '#ffd23f'); soft(); }
+  if (sh.id === 'smash') { scene = dark; exp = 1.3; const G = dark.userData.guy; pose2(G, 'raise', t, sh.a + 0.6); dark.userData.bulb.intensity = 6 + Math.sin(t * 23) * 0.6 + (Math.sin(t * 7.3) > 0.97 ? -3 : 0);
     mv(u, V(1.1, 1.7, 2.2), V(0.9, 1.68, 1.7), V(0, 1.45, -0.9), V(0, 1.5, -0.9), 50); tag(G, 'Forum-User', '#ff5555');
-    if (t >= 33.15) ui.tip = { o: clamp01((t - 33.15) / 0.1), icon: 'hammer', title: 'Bone Smashing', titleCol: '#ff5555', lines: ['<span style="color:#ff5555">Gefährlich – nicht nachmachen!</span>'] }; }
+    if (t >= wt(127)) ui.tip = { o: clamp01((t - wt(127)) / 0.1), icon: 'hammer', title: 'Bone Smashing', titleCol: '#ff5555', lines: ['<span style="color:#ff5555">Gefährlich – nicht nachmachen!</span>'] }; }
   if (sh.id === 'doctor') { scene = clinic; exp = 1.25; const D = clinic.userData.doc; pose2(D, 'point', t); D.userData.armR.rotation.x = -1.6 + Math.sin(t * 2) * 0.05;
     mv(u, V(1.4, 1.7, 2.2), V(1.1, 1.7, 1.6), V(-0.2, 1.6, -2.6), V(-0.3, 1.6, -2.6), 50); tag(D, 'Ärztin/Arzt', '#ffffff');
-    if (t >= 35.6) ui.tip = { o: clamp01((t - 35.6) / 0.1), icon: 'cross', title: 'Ärztliche Warnung', titleCol: '#ff5555', lines: ['<span style="color:#aaaaaa">Bone Smashing kann verursachen:</span>', '<span style="color:#ff5555">Knochenbrüche · Nervenschäden</span>'] }; }
+    if (t >= wt(131)) ui.tip = { o: clamp01((t - wt(131)) / 0.1), icon: 'cross', title: 'Ärztliche Warnung', titleCol: '#ff5555', lines: ['<span style="color:#aaaaaa">Bone Smashing kann verursachen:</span>', '<span style="color:#ff5555">Knochenbrüche · Nervenschäden</span>'] }; }
   if (sh.id === 'sign') { scene = dusk; exp = 1.35; if (!signDrawn) { drawSign(); signDrawn = true; } mv(u, V(0, 3.5, 13.5), V(0, 3.6, 12.0), V(0, 2.5, 0), V(0, 2.55, 0), 46); }
 
   camera.updateProjectionMatrix(); renderer.toneMappingExposure = exp;
@@ -521,12 +531,13 @@ const ICONS = {
   jaw: '<rect x="1" y="1" width="6" height="5" fill="#e8b894"/><rect x="2" y="6" width="4" height="1" fill="#e8b894"/><rect x="1" y="1" width="6" height="1" fill="#3e2614"/><rect x="2" y="3" width="1" height="1" fill="#222"/><rect x="5" y="3" width="1" height="1" fill="#222"/>',
   tongue: '<rect x="1" y="2" width="6" height="4" fill="#8a3a3a"/><rect x="2" y="4" width="4" height="2" fill="#e86a7a"/><rect x="1" y="1" width="6" height="1" fill="#f0f0f0"/>',
   hammer: '<rect x="3" y="3" width="1" height="5" fill="#6a4a2a"/><rect x="1" y="1" width="5" height="2" fill="#8a8e94"/>',
+  cream: '<rect x="2" y="2" width="4" height="5" fill="#f0f0f0"/><rect x="2" y="1" width="4" height="1" fill="#55aaff"/><rect x="3" y="4" width="2" height="1" fill="#55aaff"/>',
   cross: '<rect x="3" y="1" width="2" height="6" fill="#ff4040"/><rect x="1" y="3" width="6" height="2" fill="#ff4040"/>',
 };
 function drawUI(t, ui) {
   let cur = null; for (const w of words) if (t >= w[1] - 0.02) cur = w;
   if (cur && t > cur[2] + 1.2) cur = null;
-  if (cur) { let txt = cur[0]; if (txt.startsWith('zweitausendvierundzwanzig')) txt = '2024.'; if (txt === 'sechzehn') txt = '16';
+  if (cur) { let txt = cur[0]; const NUM = { 'zweitausendvierundzwanzig.': '2024.', 'sechzehn': '16', 'eins': '1', 'zehn.': '10.', 'Vier.': '4.' }; if (NUM[txt]) txt = NUM[txt];
     const f = clamp01((t - cur[1] + 0.02) / 0.07), g = Math.round(lerp(140, 255, f)); capEl.style.color = `rgb(${g},${g},${g})`; capEl.style.opacity = lerp(0.6, 1, f); capEl.textContent = txt; }
   else capEl.textContent = '';
   tagsEl.innerHTML = ui.tags.map(([p, txt, col]) => { const s = project(p); return s.ok ? `<div class="tag" style="left:${s.x}px;top:${s.y}px;color:${col}">${txt}</div>` : ''; }).join('');
