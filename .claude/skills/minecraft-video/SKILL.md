@@ -10,9 +10,10 @@ Alle Regeln stehen in `CLAUDE.md` – sie sind verbindlich. Vorlage: `narzissmus
 1. **Ordner anlegen:** `<thema>/` mit `audio/`; `node_modules` als Symlink auf `../test-video/node_modules`; `render.mjs`, `index.html`, `.gitignore` aus `narzissmus/` kopieren.
 2. **Script schreiben** (Aufbau aus CLAUDE.md §2, ca. 245–255 Wörter, Deutsch, Fakten prüfen). Jahreszahlen ggf. ausschreiben, wenn die Stimme sie undeutlich spricht.
 3. **Stimme erzeugen:** ElevenLabs Mark (`1SM7GgM6IMuvQlz2BwM3`), `/v1/text-to-speech/<id>/with-timestamps?output_format=mp3_44100_192`, Antwort als `audio/ts_raw.json`, Audio als `audio/vo_raw.mp3`.
-4. **Pausen normalisieren:** in `audio/`: `python3 -I ../../test-video/presets/pausen-normalisieren.py` → `vo.mp3` + `words.json`.
+4. **Pausen normalisieren:** in `audio/`: `python3 -I ../../test-video/presets/pausen-normalisieren.py 0.24 0.20 0.10` → `vo.mp3` + `words.json` (Werte nachjustieren, bis Messung in 5. passt).
 5. **Messen:** `HF_HUB_DISABLE_XET=1 python3 -I test-video/presets/tempo-messen.py <thema>/audio/vo.mp3` → muss 196–207 wpm, Komma Ø170–225 ms, Punkt Ø200–260 ms und Länge 67–75 s ergeben. Sonst `speed` anpassen (höher = schneller) und ab 3. wiederholen.
 6. **Shotliste** wortbasiert planen (`CUTS = [[wortIndex,'id'], …]`), Ø 2,2–2,7 s pro Shot, Hook nach Preset, Ortsschnitt, Tooltips/Chat an Wörter gekoppelt, letzte 2–4 Wörter über dem Hook-Bild (Loop).
+6b. **Kranfahrt-Sync:** `python3 -I test-video/presets/erklaert-onset.py <thema>/audio/vo.mp3 <thema>/words.json --fix` (hörbarer Einsatz von „erklärt“), in scene.js `WHIP0 = wt(1) - 1/30`.
 7. **scene.js bauen** auf Basis von `narzissmus/scene.js` (Helfer, Figuren, `heroCam`, UI, Loop-Logik übernehmen; Sets/Shots neu). `SPEECH_END` = hörbares Sprachende messen, `DUR = round((SPEECH_END+0.16)*30)/30`.
 8. **Testbilder:** Server `python3 -m http.server 8765` im Repo-Root (im Hintergrund), dann pro Shot ein Frame: `PROJ=<thema> node render.mjs 0 0 test "<frames>"`, ansehen, Kameras/Figuren korrigieren (Gesichter sichtbar, nichts verdeckt, kein Text unter Untertitel).
 9. **Voll-Render** in zwei Prozessen parallel (`render.mjs 0 N/2 frames` und `N/2 N frames`).

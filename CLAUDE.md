@@ -31,10 +31,11 @@ Details und Messwerte: `analyse/video-analyse.md`, `test-video/presets/hook-kran
 | Pause nach Komma | Ø 170–225 ms |
 | Pause nach Punkt | Ø 200–260 ms (max ~0,45 s) |
 | Wortdauer | Ø 250 ms |
-Vorgehen: TTS mit Zeitstempeln (`/with-timestamps`, mp3_44100_192) → `test-video/presets/pausen-normalisieren.py` (Ziel 0,11 s nach Punkt / 0,09 s nach Komma; Whisper misst ~+90 ms) → mit Whisper nachmessen. Speed so lange anpassen, bis Tempo UND Länge passen.
+Vorgehen: TTS mit Zeitstempeln (`/with-timestamps`, mp3_44100_192) → `test-video/presets/pausen-normalisieren.py [TP] [TC] [TW]` (arbeitet an der echten Stille, repariert TTS-Knackser; Startwerte 0.24 / 0.20 / 0.10 = akustische Stille nach Punkt / Komma / sonst) → mit Whisper nachmessen. **`ts_raw.json` und `vo_raw.mp3` aufheben** (für spätere Korrekturen mit derselben Stimme). Nach dem Normalisieren Knacks-Prüfung: keine doppelten Sprachfetzen, keine Lücken in Wörtern. Speed so lange anpassen, bis Tempo UND Länge passen.
 
 ## 4. Hook (Preset „Kranfahrt“ – nie ändern)
 - 0 s bis „erklärt“: Two-Shot auf Augenhöhe, zwei Figuren links/rechts mit farbigen Nametags, langsamer Push-in
+- **Kranfahrt exakt synchron zum Wort „erklärt“ (Pflicht, für Auge und Ohr):** Startzeit NIE aus Zeitstempeln übernehmen (ElevenLabs/Whisper liegen dort oft 50–150 ms daneben), sondern den hörbaren Einsatz messen: `python3 -I test-video/presets/erklaert-onset.py <projekt>/audio/vo.mp3 <projekt>/words.json --fix` → setzt Wort 1 auf den gemessenen Einsatz (Untertitel ebenfalls synchron). In `scene.js`: `WHIP0 = wt(1) - 1/30` (1 Frame Vorlauf gleicht den sanften Anlauf aus). Am fertigen Video prüfen: erste sichtbare Kamerabewegung ≤ 1 Frame neben dem hörbaren „erklärt“.
 - Ab dem Wort „erklärt“: **EINE durchgehende Kranfahrt nach hinten + oben + zur Seite (links)**, Dauer 0,57 s, smootherstep, leichter Bogen nach oben, Bildwinkel 56°→46° – **kein Schnitt, kein Motion Blur, keine Effekte**
 - Endet in einer hohen, weiten, seitlichen Totale; Kamera treibt langsam weiter, Figuren klein im Bild
 - Erster harter Schnitt erst auf das Ortswort

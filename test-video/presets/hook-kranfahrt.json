@@ -153,5 +153,11 @@
       "ton_nahtlos": "python3 test-video/presets/audio-loop.py mix_raw.wav mix.wav DAUER"
     },
     "beispiel_messung_looksmaxxing": "Bild: 1,33 vs. normal 1,32 (ohne Untertitel) · Ton: Sample-Sprung 0,0001 · Stille am Übergang 0,36 s"
+  },
+  "kranfahrt_sync": {
+    "regel": "Kranfahrt startet exakt mit dem HÖRBAREN Einsatz von „erklärt“ – nicht mit dem Zeitstempel (liegt oft 50–150 ms daneben)",
+    "messen": "python3 test-video/presets/erklaert-onset.py <projekt>/audio/vo.mp3 <projekt>/words.json --fix",
+    "code": "WHIP0 = wt(1) - 1/30 (1 Frame Vorlauf wegen smootherstep-Anlauf), WHIP1 = WHIP0 + 0.57",
+    "pruefen": "erste sichtbare Bewegung ≤ 1 Frame neben dem hörbaren „erklärt“"
   }
 }

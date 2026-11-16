@@ -501,7 +501,7 @@ const words = await (await fetch('words.json')).json();
 const wt = i => words[i][1];
 const SPEECH_END = 72.88; // hörbares Ende der Sprache (gemessen, −45 dB)
 const DUR = Math.round((SPEECH_END + 0.16) * 30) / 30;
-const WHIP0 = wt(1), WHIP1 = wt(1) + 0.57;
+const WHIP0 = wt(1) - 1 / 30, WHIP1 = WHIP0 + 0.57; // wt(1) = hörbarer Einsatz „erklärt“ (erklaert-onset.py --fix); 1 Frame Vorlauf gleicht den sanften Anlauf aus
 const CUTS = [[0, 'hero'], [4, 'india'], [8, 'castes'], [16, 'tiers'], [27, 'priya'], [33, 'parents'], [43, 'higher'], [50, 'rise'], [57, 'nosay'], [63, 'laws'], [68, 'shame'], [74, 'term'],
   [82, 'europe'], [90, 'nochoice'], [100, 'univ'], [110, 'kitchen'], [117, 'office'], [125, 'status'], [133, 'internet'], [140, 'claim'], [151, 'broke'], [157, 'exag'], [164, 'apps'],
   [175, 'sara'], [178, 'jonas'], [181, 'before'], [188, 'together'], [201, 'grads'], [213, 'wedding'], [226, 'values'], [236, 'traits'], [240, 'sign'], [247, 'loop']];
