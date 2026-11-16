@@ -214,7 +214,7 @@ const MIA = { skin: 0xf0c4a2, hair: 0x2a1a14, longHair: true, top: 0xe8b830, bot
 function hammerInHand(ch) { const h = new THREE.Group(); h.position.set(0, -0.68, 0.05); h.add(box(0.06, 0.06, 0.55, C(0x6a4a2a), 0, 0, 0.2)); h.add(box(0.14, 0.14, 0.3, C(0x6a6e74, { metal: 0.6, rough: 0.4 }), 0, 0, 0.48)); ch.userData.armR.add(h); }
 function dumbbell(ch, arm) { const d = new THREE.Group(); (ch.userData.dbs ||= []).push(d); d.position.set(0, -0.7, 0); d.add(box(0.06, 0.06, 0.4, C(0x2a2a2a), 0, 0, 0)); d.add(box(0.16, 0.16, 0.08, C(0x3a3a3a), 0, 0, -0.18)); d.add(box(0.16, 0.16, 0.08, C(0x3a3a3a), 0, 0, 0.18)); ch.userData[arm].add(d); }
 
-const crownOn = (ch) => { const g = new THREE.Group(); const gm = C(0xf0c030, { metal: 0.6, rough: 0.35 }); g.add(box(0.56, 0.12, 0.56, gm, 0, 0.56, 0)); for (const [x, z] of [[-0.22, -0.22], [0.22, -0.22], [-0.22, 0.22], [0.22, 0.22], [0, 0.22]]) g.add(box(0.1, 0.16, 0.1, gm, x, 0.68, z)); ch.userData.head.add(g); return g; };
+const crownOn = (ch) => { ch.userData.hatExtra = 0.3; const g = new THREE.Group(); const gm = C(0xf0c030, { metal: 0.6, rough: 0.35 }); g.add(box(0.56, 0.12, 0.56, gm, 0, 0.56, 0)); for (const [x, z] of [[-0.22, -0.22], [0.22, -0.22], [-0.22, 0.22], [0.22, 0.22], [0, 0.22]]) g.add(box(0.1, 0.16, 0.1, gm, x, 0.68, z)); ch.userData.head.add(g); return g; };
 const laurel = (ch) => { const g = new THREE.Group(); const lm = C(0x6a9a3a); for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; g.add(box(0.12, 0.06, 0.08, lm, Math.sin(a) * 0.28, 0.5, Math.cos(a) * 0.28)); } ch.userData.head.add(g); };
 const inHand = (ch, mesh) => { const g = new THREE.Group(); g.position.set(0, -0.7, 0.05); g.add(mesh); ch.userData.armR.add(g); return g; };
 const phoneMesh = () => { const g = new THREE.Group(); g.add(box(0.12, 0.2, 0.03, C(0x1a1a1a), 0, 0, 0.1)); g.add(box(0.1, 0.17, 0.01, new THREE.MeshBasicMaterial({ color: 0x9ad0ff }), 0, 0, 0.12, { cast: false })); return g; };
@@ -287,6 +287,7 @@ const scrollMesh = () => { const g = new THREE.Group(); g.add(box(0.06, 0.06, 0.
 const sackMesh = () => { const g = new THREE.Group(); g.add(box(0.42, 0.46, 0.34, C(0xc8b080), 0, -0.05, 0.28)); g.add(box(0.16, 0.1, 0.16, C(0xa89060), 0, 0.22, 0.28)); return g; };
 const chickenMesh = () => { const g = new THREE.Group(); g.add(box(0.26, 0.24, 0.34, C(0xf4f4f0), 0, 0, 0.2)); g.add(box(0.16, 0.2, 0.14, C(0xf4f4f0), 0, 0.16, 0.38)); g.add(box(0.06, 0.06, 0.08, C(0xe0a020), 0, 0.15, 0.48, { cast: false })); g.add(box(0.06, 0.08, 0.06, C(0xd02020), 0, 0.3, 0.38, { cast: false })); return g; };
 const heldBy = (ch, mesh, arm = 'armR') => { ch.userData[arm].add(mesh); return mesh; };
+const scepterMesh = () => { const g = new THREE.Group(); g.position.set(0, -0.66, 0.02); g.rotation.x = 1.15; const gm = C(0xf0c030, { metal: 0.6, rough: 0.35 }); g.add(box(0.06, 1.0, 0.06, gm, 0, 0.15, 0)); g.add(box(0.16, 0.16, 0.16, gm, 0, 0.7, 0)); g.add(box(0.07, 0.07, 0.07, new THREE.MeshBasicMaterial({ color: 0xff3030 }), 0, 0.82, 0, { cast: false })); return g; };
 
 // ---------- Bau-Helfer ----------
 function oak(sc, x, z, h = 4, seed = 1, y0 = 0) { const r = rng(seed), tr = M(T.darkwood), lf = C([0x3f7a2c, 0x4a8a34, 0x356a26][seed % 3]);
@@ -322,7 +323,7 @@ const WD = {};
   const grassM = M(tex(16, 16, (c, r) => { noiseFill(c, r, 16, 16, 0x6a8f3e, 0.12); for (let i = 0; i < 14; i++) px(c, Math.floor(r() * 16), Math.floor(r() * 16), 0x5a7a32); }, 3010));
   world.add(box(800, 1, 800, grassM, 0, -0.5, 0, { cast: false }));
   const pathM = M(tex(16, 16, (c, r) => noiseFill(c, r, 16, 16, 0x9a7a52, 0.14), 3011));
-  world.add(box(4.4, 0.06, 32, pathM, 0, 0.03, -8, { cast: false })); world.add(box(40, 0.06, 3.6, pathM, 20, 0.031, 6, { cast: false }));
+  world.add(box(2.6, 0.06, 62, pathM, 0, 0.03, -23, { cast: false })); world.add(box(40, 0.06, 3.6, pathM, 20, 0.031, 6, { cast: false }));
   // Weizenfelder
   const wheatM = M(T.wheat), wheatM2 = M(tex(16, 16, (c, r) => { noiseFill(c, r, 16, 16, 0xd8b85a, 0.12); for (let x = 0; x < 16; x += 3) for (let y = 0; y < 16; y++) if (r() < 0.5) px(c, x, y, 0x9a7a32); }, 3012)), farm = M(tex(16, 16, (c, r) => { noiseFill(c, r, 16, 16, 0x5a3e26, 0.1); for (let y = 0; y < 16; y += 4) for (let x = 0; x < 16; x++) px(c, x, y, 0x3e2a18); }, 3013));
   const field = (x0, x1, z0, z1, seed, empty = false) => { const r = rng(seed); world.add(box(x1 - x0, 0.08, z1 - z0, farm, (x0 + x1) / 2, 0.04, (z0 + z1) / 2, { cast: false }));
@@ -333,27 +334,27 @@ const WD = {};
   const r0 = rng(3020), poppy = C(0xd8241c), tall = C(0x5a8a32);
   for (let i = 0; i < 70; i++) { const x = (r0() < 0.5 ? -1 : 1) * (2.3 + r0() * 0.5), z = -20 + r0() * 26; world.add(box(0.14, 0.4 + r0() * 0.3, 0.14, r0() < 0.35 ? poppy : tall, x, 0.25, z, { cast: false })); }
   // Hügel + Burg
-  const BZ = -44, stoneM = M(T.cobble), wallM = M(tileTex(0x9a948a, 0x6a645c, 3030)), roofB = M(tileTex(0x3a4a7a, 0x22304e, 3031));
-  world.add(box(48, 2, 40, grassM, 0, 1, BZ)); world.add(box(40, 2, 32, grassM, 0, 3, BZ - 2));
-  for (let k = 0; k < 8; k++) world.add(box(4.4, (k + 1) * 0.5, 1, pathM, 0, (k + 1) * 0.25, -24 + 0.5 - k * 1 - 0.5)); // Rampe
-  const CY = 4, cz = BZ - 4, hw = 12, hd = 10, WH = 7;
+  const BZ = -80, stoneM = M(T.cobble), wallM = M(tileTex(0x9a948a, 0x6a645c, 3030)), roofB = M(tileTex(0x3a4a7a, 0x22304e, 3031));
+  world.add(box(64, 3, 50, grassM, 0, 1.5, BZ)); world.add(box(50, 3, 40, grassM, 0, 4.5, BZ - 3));
+  for (let k = 0; k < 14; k++) { const hh = Math.min(6, (k + 1) * 0.5); world.add(box(2.6, hh, 1, pathM, 0, hh / 2, BZ + 30.5 - k)); } // Rampe
+  const CY = 6, cz = BZ - 8, hw = 14, hd = 10, WH = 8;
   for (const [x, z, w, d] of [[0, cz + hd, hw * 2, 1.4], [0, cz - hd, hw * 2, 1.4], [-hw, cz, 1.4, hd * 2], [hw, cz, 1.4, hd * 2]]) { world.add(box(w, WH, d, wallM, x, CY + WH / 2, z));
     const n = Math.round(Math.max(w, d) / 1.2); for (let i = 0; i < n; i += 2) world.add(box(w > d ? 0.8 : 1.5, 0.8, w > d ? 1.5 : 0.8, wallM, x + (w > d ? -w / 2 + 0.6 + i * 1.2 : 0), CY + WH + 0.4, z + (w > d ? 0 : -d / 2 + 0.6 + i * 1.2))); }
   world.add(box(3.2, 4.2, 0.3, C(0x3a2416), 0, CY + 2.1, cz + hd + 0.72, { cast: false })); world.add(box(3.8, 0.5, 0.4, stoneM, 0, CY + 4.4, cz + hd + 0.75));
   WD.flags = [];
-  for (const [x, z] of [[-hw, cz + hd], [hw, cz + hd], [-hw, cz - hd], [hw, cz - hd]]) { world.add(box(4, 11, 4, wallM, x, CY + 5.5, z)); for (let k = 0; k < 3; k++) world.add(box(4.8 - k * 1.4, 1.2, 4.8 - k * 1.4, roofB, x, CY + 11.6 + k * 1.2, z));
-    world.add(box(0.8, 1.4, 0.1, C(0x1a1410), x, CY + 8, z + 2.03, { cast: false })); WD.flags.push(flag(FLAG.royal, 2.6, 1.6, 4, world, V(x, CY + 15, z), 0.3, x + z)); }
-  world.add(box(9, 16, 9, wallM, 0, CY + 8, cz - 2)); for (let k = 0; k < 4; k++) world.add(box(10 - k * 2.2, 1.4, 10 - k * 2.2, roofB, 0, CY + 16.7 + k * 1.4, cz - 2));
-  for (const x of [-2.4, 0, 2.4]) world.add(box(1, 1.8, 0.1, M(T.window, { emissive: 0xffffff, ei: 0.5 }), x, CY + 11, cz + 2.53, { cast: false }));
-  WD.flags.push(flag(FLAG.royal, 3.4, 2.1, 5, world, V(0, CY + 22, cz - 2), 0.2, 3));
+  for (const [x, z] of [[-hw, cz + hd], [hw, cz + hd], [-hw, cz - hd], [hw, cz - hd]]) { world.add(box(4.4, 13, 4.4, wallM, x, CY + 6.5, z)); for (let k = 0; k < 4; k++) world.add(box(5.2 - k * 1.3, 1.3, 5.2 - k * 1.3, roofB, x, CY + 13.65 + k * 1.3, z));
+    world.add(box(0.8, 1.4, 0.1, C(0x1a1410), x, CY + 9, z + 2.23, { cast: false })); WD.flags.push(flag(FLAG.royal, 2.8, 1.7, 4, world, V(x, CY + 18.5, z), 0.3, x + z)); }
+  world.add(box(10, 19, 10, wallM, 0, CY + 9.5, cz - 2)); for (let k = 0; k < 5; k++) world.add(box(11 - k * 2.1, 1.4, 11 - k * 2.1, roofB, 0, CY + 19.7 + k * 1.4, cz - 2));
+  for (const x of [-2.4, 0, 2.4]) world.add(box(1, 1.8, 0.1, M(T.window, { emissive: 0xffffff, ei: 0.5 }), x, CY + 13, cz + 3.03, { cast: false }));
+  WD.flags.push(flag(FLAG.royal, 3.6, 2.2, 5, world, V(0, CY + 26.5, cz - 2), 0.2, 3));
   // Dorf
   const roofDark = M(T.roof);
-  for (const [x, z, w, rot, rf] of [[26, -1, 5, 0, 0], [33, -1.5, 4.4, 0, 1], [40, -1, 5, 0, 0], [24, 13, 5, Math.PI, 1], [31, 13.5, 4.6, Math.PI, 0], [38, 13, 5, Math.PI, 1], [46, 4, 4.6, -Math.PI / 2, 0], [19, 21, 4.4, Math.PI, 1]]) medHouse(world, x, z, w, 4.4, 3.2, rot, rf ? roofDark : M(T.roofRed), true);
+  for (const [x, z, w, rot, rf] of [[26, -1, 5, 0, 0], [33, -1.5, 4.4, 0, 1], [40, -1, 5, 0, 0], [24, 13, 5, Math.PI, 1], [31, 13.5, 4.6, Math.PI, 0], [38, 13, 5, Math.PI, 1], [46, 14, 4.6, Math.PI, 0], [19, 21, 4.4, Math.PI, 1]]) medHouse(world, x, z, w, 4.4, 3.2, rot, rf ? roofDark : M(T.roofRed), true);
   // Brunnen am Dorfplatz
   world.add(box(2.4, 0.9, 2.4, stoneM, 33, 0.45, 6)); world.add(box(1.8, 0.1, 1.8, new THREE.MeshStandardMaterial({ color: 0x2a5a8a, roughness: 0.3 }), 33, 0.86, 6, { cast: false }));
   for (const x of [-1, 1]) world.add(box(0.2, 2.2, 0.2, M(T.darkwood), 33 + x, 1.1, 6)); world.add(box(2.6, 0.5, 1.2, roofDark, 33, 2.4, 6));
   // Marktstand
-  const st = new THREE.Group(); st.position.set(28.5, 0, 8.3); st.rotation.y = 0.0; world.add(st); st.add(box(2.6, 0.9, 1.0, M(T.planks), 0, 0.45, 0)); for (const x of [-1.25, 1.25]) for (const z of [-0.45, 0.45]) st.add(box(0.12, 2.5, 0.12, C(0x6a4a2a), x, 1.25, z));
+  const st = new THREE.Group(); st.position.set(37.5, 0, 9.4); st.rotation.y = 0.0; world.add(st); st.add(box(2.6, 0.9, 1.0, M(T.planks), 0, 0.45, 0)); for (const x of [-1.25, 1.25]) for (const z of [-0.45, 0.45]) st.add(box(0.12, 2.5, 0.12, C(0x6a4a2a), x, 1.25, z));
   for (let i = 0; i < 6; i++) st.add(box(0.48, 0.12, 1.3, C(i % 2 ? 0xc03a2a : 0xe8e2d0), -1.2 + i * 0.48, 2.5, 0));
   for (const [x, c] of [[-0.8, 0xc8b080], [0, 0xe07030], [0.8, 0x6a9a3a]]) st.add(box(0.6, 0.3, 0.6, C(c), x, 1.05, 0));
   // Hütte von Hans
@@ -365,8 +366,8 @@ const WD = {};
     const len = Math.hypot(x1 - x0, z1 - z0), a = Math.atan2(x1 - x0, z1 - z0); for (const y of [0.5, 0.9]) { const b = box(0.08, 0.12, len, fenceM, (x0 + x1) / 2, y, (z0 + z1) / 2); b.rotation.y = a; world.add(b); } };
   fence(2.4, 21, 2.4, 30); fence(2.4, 30, 15, 30);
   // Dorftor (Hans darf nicht weg)
-  for (const x of [48.5, 53.5]) world.add(box(1.2, 4.2, 1.2, M(T.planks), x, 2.1, 6)); world.add(box(6.4, 0.8, 1.4, M(T.planks), 51, 4.4, 6));
-  fence(53.5, 6.0, 53.5, 18); fence(48.5, 6.0, 48.5, 18);
+  for (const z of [3.4, 8.6]) world.add(box(1.2, 4.2, 1.2, M(T.planks), 51, 2.1, z)); world.add(box(1.4, 0.8, 6.6, M(T.planks), 51, 4.4, 6));
+  fence(51, 8.6, 51, 18); fence(51, 3.4, 51, -7);
   world.add(box(14, 0.06, 3.6, pathM, 58, 0.031, 6, { cast: false }));
   // Herrenhaus (Ritter)
   const mh = new THREE.Group(); mh.position.set(24, 0, -16); world.add(mh); mh.add(box(10, 6, 7, wallM, 0, 3, 0)); for (let k = 0; k < 4; k++) mh.add(box(10.6 - k * 2.4, 0.8, 7.6, roofDark, 0, 6.4 + k * 0.8, 0));
@@ -400,19 +401,19 @@ const WD = {};
   for (let i = 0; i < 90; i++) { const x = FX - 28 + rfw() * 56, z = FZ - 30 + rfw() * 32; if (Math.abs(x - FX) < 3 && z > FZ - 4) continue; spruce(world, x, z, 6 + Math.floor(rfw() * 4)); }
   for (let i = 0; i < 20; i++) { const x = FX - 28 + rfw() * 56, z = FZ + 12 + rfw() * 10; spruce(world, x, z, 6 + Math.floor(rfw() * 3)); }
   const scv = document.createElement('canvas'); scv.width = 512; scv.height = 256; const stx = new THREE.CanvasTexture(scv); stx.colorSpace = THREE.SRGBColorSpace;
-  const ps = new THREE.Group(); ps.position.set(FX + 2.2, 0, FZ + 1.6); ps.rotation.y = -0.35; world.add(ps); ps.add(box(0.16, 2.2, 0.16, C(0x6a6a6a, { metal: 0.4 }), -1.1, 1.1, 0)); ps.add(box(0.16, 2.2, 0.16, C(0x6a6a6a, { metal: 0.4 }), 1.1, 1.1, 0));
+  const ps = new THREE.Group(); ps.position.set(FX + 3.4, 0, FZ - 0.8); ps.rotation.y = -0.35; world.add(ps); ps.add(box(0.16, 2.2, 0.16, C(0x6a6a6a, { metal: 0.4 }), -1.1, 1.1, 0)); ps.add(box(0.16, 2.2, 0.16, C(0x6a6a6a, { metal: 0.4 }), 1.1, 1.1, 0));
   ps.add(new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.3, 0.08), [C(0xe8e8e8), C(0xe8e8e8), C(0xe8e8e8), C(0xe8e8e8), new THREE.MeshStandardMaterial({ map: stx, roughness: 0.6 }), C(0xe8e8e8)])); ps.children[2].position.y = 2.0; ps.children[2].castShadow = true;
   WD.signTex = { scv, stx };
   // Fackeln (für Nacht/Dämmerung)
   WD.torches = [];
-  for (const [x, z] of [[30, 3.8], [36, 3.8], [44.5, -5.2], [52, 4.8], [86, 30], [80, 36]]) { world.add(box(0.14, 2.0, 0.14, C(0x5a3a1a), x, 1.0, z)); world.add(box(0.26, 0.3, 0.26, flameMat, x, 2.1, z, { cast: false }));
+  for (const [x, z] of [[30, 3.8], [36, 3.8], [41.4, -5.6], [52, 10.4], [86, 30], [80, 36], [61.4, 9.0]]) { world.add(box(0.14, 2.0, 0.14, C(0x5a3a1a), x, 1.0, z)); world.add(box(0.26, 0.3, 0.26, flameMat, x, 2.1, z, { cast: false }));
     const l = new THREE.PointLight(0xff9a40, 0, 14, 1.6); l.position.set(x, 2.5, z); world.add(l); WD.torches.push(l); }
   // Licht
   WD.sun = sunLight(world, 0xfff0d0, 3.3, V(-40, 60, 40), V(0, 0, 0), 34); WD.hemi = new THREE.HemisphereLight(0xd8e8ff, 0x8a7a5a, 1.3); world.add(WD.hemi);
   // Figuren
   const mk = (o, ...fx) => { const c = humanoid(o); world.add(c); c.visible = false; fx.forEach(f => f(c)); return c; };
   WD.hans = mk(HANS, strawHat); WD.hansHoe = heldBy(WD.hans, hoeMesh()); WD.hansSack = heldBy(WD.hans, sackMesh(), 'armL');
-  WD.koenig = mk(KOENIG, crownOn, c => cape(c, 0xa81c1c));
+  WD.koenig = mk(KOENIG, crownOn, c => cape(c, 0xa81c1c)); WD.scepter = heldBy(WD.koenig, scepterMesh());
   WD.fuerst = mk(FUERST, c => cape(c, 0x2a3270)); WD.fSword = heldBy(WD.fuerst, swordMesh());
   WD.graf = mk(GRAF, c => cape(c, 0x1e4a2a));
   WD.ritter = mk(RITTER, c => knightGear(c, 0x34408a)); WD.rSword = heldBy(WD.ritter, swordMesh());
@@ -425,13 +426,13 @@ const WD = {};
   WD.peasantFlag = flag(FLAG.peasant, 1.6, 1.0, 3.4, world, V(88, 0, 36), 0.4, 2);
 }
 const MOODS = {
-  gold: { sky: [0x4a6ab0, 0xf0a878, 0xffd29a], fog: 0xf2c69a, sun: 0xffbc80, si: 3.7, dir: V(-0.62, 0.34, 0.7), hemi: [0xffe0c0, 0x7a6048, 1.25], cloud: 0xffe0cc, torch: 0, exp: 1.28 },
+  gold: { skyDir: V(0.17, 0.25, -1), sky: [0x4a6ab0, 0xf0a878, 0xffd29a], fog: 0xf2c69a, sun: 0xffbc80, si: 3.7, dir: V(-0.62, 0.34, 0.7), hemi: [0xffe0c0, 0x7a6048, 1.25], cloud: 0xffe0cc, torch: 0, exp: 1.28 },
   day: { sky: [0x3a80d0, 0x9ac4e8, 0xf0dcb8], fog: 0xe8dcc0, sun: 0xfff0d0, si: 3.3, dir: V(-0.5, 0.75, 0.45), hemi: [0xd8e8ff, 0x8a7a5a, 1.3], cloud: 0xffffff, torch: 0, exp: 1.3 },
-  night: { sky: [0x04060e, 0x0e1830, 0x1c2848], fog: 0x0e1424, sun: 0x8aa8e8, si: 1.0, dir: V(0.4, 0.8, 0.35), hemi: [0x4a5a90, 0x101018, 0.75], cloud: 0x283048, torch: 1, exp: 1.55 },
-  dusk: { sky: [0x2a2a5a, 0xc0604a, 0xff9a5a], fog: 0xb06048, sun: 0xff8a50, si: 2.8, dir: V(-0.6, 0.22, 0.75), hemi: [0xc08a8a, 0x3a2a2a, 0.9], cloud: 0xffb090, torch: 1, exp: 1.35 },
+  night: { sky: [0x04060e, 0x0e1830, 0x1c2848], fog: 0x0e1424, sun: 0x8aa8e8, si: 1.3, dir: V(0.3, 0.7, 0.65), hemi: [0x5a6aa0, 0x141420, 0.95], cloud: 0x283048, torch: 1, exp: 1.55 },
+  dusk: { skyDir: V(0.3, 0.12, 1), sky: [0x2a2a5a, 0xc0604a, 0xff9a5a], fog: 0xb06048, sun: 0xff8a50, si: 3.0, dir: V(-0.45, 0.28, -0.85), hemi: [0xd09a8a, 0x3a2a2a, 1.05], cloud: 0xffb090, torch: 1, exp: 1.35 },
 };
 function setMood(name, center) { const m = MOODS[name];
-  WD.sky.material.uniforms.top.value.set(m.sky[0]); WD.sky.material.uniforms.mid.value.set(m.sky[1]); WD.sky.material.uniforms.hor.value.set(m.sky[2]); WD.sky.material.uniforms.sd.value.copy(m.dir).normalize();
+  WD.sky.material.uniforms.top.value.set(m.sky[0]); WD.sky.material.uniforms.mid.value.set(m.sky[1]); WD.sky.material.uniforms.hor.value.set(m.sky[2]); WD.sky.material.uniforms.sd.value.copy(m.skyDir ?? m.dir).normalize();
   world.fog.color.set(m.fog); WD.sun.color.set(m.sun); WD.sun.intensity = m.si; WD.sun.target.position.copy(center); WD.sun.position.copy(center).addScaledVector(m.dir.clone().normalize(), 80);
   WD.hemi.color.set(m.hemi[0]); WD.hemi.groundColor.set(m.hemi[1]); WD.hemi.intensity = m.hemi[2]; WD.cloudM.color.set(m.cloud); WD.torches.forEach(l => l.intensity = m.torch * 9); return m.exp; }
 function drawPrivSign() { const { scv, stx } = WD.signTex, c = scv.getContext('2d'); c.fillStyle = '#f4f4f0'; c.fillRect(0, 0, 512, 256); c.strokeStyle = '#2a6a3a'; c.lineWidth = 16; c.strokeRect(8, 8, 496, 240);
@@ -573,83 +574,83 @@ function render(frame) {
     D.flags.forEach((f, i) => f.userData.update(ta + i)); D.peasantFlag.userData.update(t);
     let mood = 'day', ctr = V(0, 0, 0);
     if (sh.id === 'hero' || sh.id === 'loop') { mood = 'gold';
-      put(D.hans, HX, 0, HZ, 0.45); put(D.koenig, HX2, 0, HZ, -0.45); pose3(D.hans, 'idle', ta, 0); pose3(D.koenig, 'cross', ta, 1); D.hans.userData.armR.rotation.x = -0.35; D.hans.userData.head.rotation.y = 0.3; D.koenig.userData.head.rotation.y = -0.25; D.koenig.userData.head.rotation.x = -0.12;
-      heroCam(ta); tag(D.hans, 'Hans (Bauer)', HERO); tag(D.koenig, 'König', BAD); ctr = V(0, 0, -8); }
+      put(D.hans, HX, 0, HZ, 0.45); put(D.koenig, HX2, 0, HZ, -0.45); pose3(D.hans, 'idle', ta, 0); pose3(D.koenig, 'idle', ta, 1); D.koenig.userData.armR.rotation.x = -1.15; D.hans.userData.armR.rotation.x = -0.35; D.hans.userData.head.rotation.y = 0.3; D.koenig.userData.head.rotation.y = -0.25; D.koenig.userData.head.rotation.x = -0.12;
+      heroCam(ta); tag(D.hans, 'Hans', HERO); tag(D.koenig, 'König', BAD); ctr = V(0, 0, -8); }
     if (sh.id === 'land') { mood = 'gold'; ctr = V(10, 0, -12); put(D.hans, 0.0, 0, -6 + (t - sh.a) * 1.0, Math.PI); pose3(D.hans, 'walk', t);
-      mv(u, V(46, 26, 34), V(42, 24.5, 30.5), V(6, 4, -22), V(5, 4, -23), 46); info(wt(4) - 0.03, 'Frankenreich, vor über 1000 Jahren'); }
+      mv(u, V(40, 28, 30), V(37, 26.5, 27), V(4, 6, -50), V(3, 6, -52), 46); info(wt(4) - 0.03, 'Frankenreich, vor über 1000 Jahren'); }
     if (sh.id === 'nomoney') { ctr = V(29, 0, 6); put(D.hans, 28.0, 0, 5.4, 0.85); put(D.vill[0], 29.8, 0, 5.6, -0.85); pose3(D.hans, 'give', t); pose3(D.vill[0], 'give', t, 1); D.hansSack.visible = true; D.hansHoe.visible = false; D.chicken.visible = true;
       D.hans.userData.armL.rotation.x = -1.3; D.hans.userData.armR.rotation.x = -0.1;
-      mv(u, V(28.9, 1.9, 9.6), V(28.9, 1.85, 9.0), V(28.9, 1.25, 5.5), V(28.9, 1.25, 5.5), 46); tag(D.hans, 'Hans', HERO); tag(D.vill[0], 'Nachbar', ALLY);
+      mv(u, V(28.9, 2.0, 10.8), V(28.9, 1.95, 10.2), V(28.9, 1.25, 5.5), V(28.9, 1.25, 5.5), 50); tag(D.hans, 'Hans', HERO); tag(D.vill[0], 'Nachbar', ALLY);
       chat(wt(11), gray('Geld: kaum')); chat(wt(13), gray('Polizei: keine')); chat(wt(16), gray('Festes Heer: keins')); }
-    if (sh.id === 'landval') { mood = 'gold'; ctr = V(6, 0, -14); mv(u, V(9, 2.2, 1.0), V(9, 2.6, -2.2), V(4, 1.0, -30), V(3, 2.0, -34), 50);
+    if (sh.id === 'landval') { mood = 'gold'; ctr = V(6, 0, -14); mv(u, V(9, 2.2, 1.0), V(9, 2.6, -2.2), V(3, 6, -70), V(2, 7, -74), 50);
       tip(wt(23) - 0.03, 'land', 'Land', '#55ff55', [gray('Das Wertvollste, was es gibt:'), gray('Nahrung · Macht · Ansehen')]); }
-    if (sh.id === 'alone') { mood = 'gold'; ctr = V(0, 4, -26); put(D.koenig, -0.5, 4, -25.2, 0.9); pose3(D.koenig, 'idle', t); D.koenig.userData.setFace({ sad: true }); D.koenig.userData.head.rotation.y = 0.15;
-      mv(u, V(3.2, 5.9, -20.6), V(2.8, 5.85, -21.2), V(-0.6, 5.2, -25.4), V(-0.6, 5.2, -25.4), 48); tag(D.koenig, 'König', BAD);
+    if (sh.id === 'alone') { mood = 'gold'; ctr = V(0, 6, -64); put(D.koenig, -0.5, 6, -63.6, 0.9); D.koenig.userData.armR.rotation.x = 0; pose3(D.koenig, 'idle', t); D.koenig.userData.setFace({ sad: true }); D.koenig.userData.head.rotation.y = 0.15;
+      mv(u, V(3.2, 7.9, -59.0), V(2.8, 7.85, -59.6), V(-0.6, 7.2, -63.8), V(-0.6, 7.2, -63.8), 48); tag(D.koenig, 'König', BAD);
       chat(wt(34), gray('Reich: zu groß')); chat(wt(36), red('Feinde: überall')); }
     if (sh.id === 'same') { ctr = V(24, 0, -10); put(D.fuerst, 22.6, 0, -11.0, 0.95); pose3(D.fuerst, 'give', t); D.fSword.visible = true; D.fuerst.userData.armR.rotation.x = -1.5 + Math.sin(t * 2) * 0.05; D.fuerst.userData.armL.rotation.x = 0.05;
       put(D.ritter, 24.4, 0, -10.6, -0.35); pose3(D.ritter, 'kneel', t, 1); D.rSword.visible = false; D.ritter.userData.armR.rotation.x = -0.3;
-      mv(u, V(24.2, 1.75, -6.4), V(24.1, 1.7, -7.1), V(23.5, 1.0, -10.8), V(23.5, 1.0, -10.8), 46); tag(D.fuerst, 'Fürst', WHITE); tag(D.ritter, 'Ritter', WHITE, -0.3); chat(wt(70), green('Ritter bekommt ein Lehen')); }
+      mv(u, V(24.7, 1.95, -4.6), V(24.6, 1.9, -5.3), V(23.5, 1.0, -10.8), V(23.5, 1.0, -10.8), 46); tag(D.fuerst, 'Fürst', WHITE); tag(D.ritter, 'Ritter', WHITE, -0.3); chat(wt(70), green('Ritter bekommt ein Lehen')); }
     if (sh.id === 'pyramid') { ctr = V(D.PY.x, 3, D.PY.z); const { x, z } = D.PY; const k = smoother(u);
       put(D.koenig, x, 6.4, z + 0.4, 0); pose3(D.koenig, 'cross', t); [[D.fuerst, -1.2], [D.graf, 1.2]].forEach(([p, dx]) => { put(p, x + dx, 4.8, z + 2.6, -dx * 0.2); pose3(p, 'idle', t, dx); });
       put(D.ritter, x - 1.5, 3.2, z + 4.2, 0.2); put(D.knights[0], x + 1.5, 3.2, z + 4.2, -0.2); [D.ritter, D.knights[0]].forEach((p, i) => pose3(p, 'idle', t, i)); D.rSword.visible = true;
       put(D.hans, x, 1.6, z + 5.8, 0); pose3(D.hans, 'sadidle', t); D.hans.userData.setFace({ sad: true }); [[D.vill[1], -1.6], [D.vill[3], 1.6], [D.vill[4], -3.2], [D.vill[5], 3.2]].forEach(([p, dx], i) => { put(p, x + dx, 1.6, z + 5.8, 0); pose3(p, 'work', t, i); });
       cam(V(x + 4.5, lerp(11.5, 4.4, k), z + lerp(14.5, 13.0, k)), V(x + 0.3, lerp(7.6, 2.6, k), z + lerp(1.0, 4.5, k)), 46);
-      tag(D.koenig, 'König', BAD); if (t >= wt(73)) { tag(D.fuerst, 'Fürsten', WHITE); tag(D.ritter, 'Ritter', WHITE); } if (t >= wt(76)) tag(D.hans, 'Hans (Bauer)', HERO); }
+      tag(D.koenig, 'König', BAD); if (t >= wt(73)) { tag(D.fuerst, 'Fürsten', WHITE); tag(D.ritter, 'Ritter', WHITE); } if (t >= wt(76)) tag(D.hans, 'Hans', HERO); }
     if (sh.id === 'noland') { ctr = V(6, 0, 20); put(D.hans, 6.0, 0, 18.4, 0.35); pose3(D.hans, 'sadidle', t); D.hans.userData.setFace({ sad: true }); D.hans.userData.armR.rotation.x = -0.4;
       mv(u, V(7.8, 1.85, 22.4), V(7.6, 1.82, 21.7), V(6.0, 1.45, 18.0), V(6.0, 1.45, 18.0), 46); tag(D.hans, 'Hans', HERO); chat(wt(80), gray('Eigenes Land: keins')); info(wt(84), 'Hans gehört zum Hof seines Herrn'); }
-    if (sh.id === 'serf') { ctr = V(51, 0, 6); put(D.hans, 51.0, 0, 3.4, 0.0); pose3(D.hans, 'sadidle', t); D.hans.userData.setFace({ sad: true });
-      put(D.ritter, 52.2, 0, 7.6, Math.PI + 0.9); pose3(D.ritter, 'cross', t, 1); D.rSword.visible = false; D.ritter.userData.setFace({ angry: true });
-      mv(u, V(50.6, 1.95, -0.6), V(50.7, 1.9, -0.1), V(51.4, 1.4, 5.4), V(51.4, 1.4, 5.4), 50); D.hans.rotation.y = Math.PI - 0.35;
+    if (sh.id === 'serf') { ctr = V(51, 0, 6); put(D.hans, 49.4, 0, 6.0, Math.PI / 2 - 0.5); pose3(D.hans, 'sadidle', t); D.hans.userData.setFace({ sad: true });
+      put(D.ritter, 51.4, 0, 5.0, 0.6); pose3(D.ritter, 'cross', t, 1); D.rSword.visible = false; D.ritter.userData.setFace({ angry: true });
+      mv(u, V(55.4, 1.95, 7.6), V(54.8, 1.9, 7.2), V(50.4, 1.3, 5.6), V(50.4, 1.3, 5.6), 50);
       tag(D.hans, 'Hans', HERO); tag(D.ritter, 'Ritter', WHITE);
       tip(wt(91) - 0.03, 'chain', 'Leibeigen', '#ff5555', [t >= wt(94) ? red('Wegziehen: verboten') : '', t >= wt(98) ? red('Heiraten: nur mit Erlaubnis') : ''].filter(Boolean)); }
     if (sh.id === 'work') { ctr = V(8, 0, 14); put(D.hans, 6.5, 0, 12.8, 0.55); pose(D.hans, 'work', t); D.hans.userData.setFace({ sad: true });
       [[D.vill[1], 9.2, 14.5, 0.3], [D.vill[2], 4.0, 15.6, 0.6]].forEach(([p, x, z, r], i) => { put(p, x, 0, z, r); pose(p, 'work', t, i + 1); });
       put(D.ritter, 3.2, 0, 10.6, 0.9); pose3(D.ritter, 'cross', t); D.rSword.visible = false;
-      mv(u, V(9.2, 2.4, 19.6), V(8.8, 2.3, 18.8), V(6.0, 1.0, 12.4), V(6.0, 1.0, 12.4), 46); tag(D.hans, 'Hans', HERO); tag(D.ritter, 'Herr', WHITE);
+      mv(u, V(8.6, 2.2, 17.0), V(8.3, 2.15, 16.4), V(6.0, 1.0, 12.4), V(6.0, 1.0, 12.4), 46); tag(D.hans, 'Hans', HERO); tag(D.ritter, 'Herr', WHITE);
       eff(wt(102), 'Abgaben + Frondienst', 'tagelang', BAD, 'hoe'); }
     if (sh.id === 'tithe') { ctr = V(44, 0, -6); put(D.hans, 43.2, 0, -4.4, 0.9); pose3(D.hans, 'give', t); D.hansSack.visible = false; D.hansHoe.visible = false; D.hans.userData.armL.rotation.x = -1.3; D.hansSack.visible = true;
       put(D.moench, 45.0, 0, -4.6, -0.9); pose3(D.moench, 'give', t, 1);
-      mv(u, V(44.3, 1.85, -0.3), V(44.2, 1.8, -0.9), V(44.1, 1.3, -4.6), V(44.1, 1.3, -4.6), 46); tag(D.hans, 'Hans', HERO); tag(D.moench, 'Kirche', WHITE);
+      mv(u, V(44.4, 2.0, 0.8), V(44.3, 1.95, 0.2), V(44.1, 1.3, -4.6), V(44.1, 1.3, -4.6), 46); tag(D.hans, 'Hans', HERO); tag(D.moench, 'Kirche', WHITE);
       chat(wt(113), red('−10 % der Ernte (der Zehnt)')); }
-    if (sh.id === 'protect') { ctr = V(32, 0, 0); put(D.ritter, 32.6, 0, 2.6, -0.2); pose(D.ritter, 'fist', t); D.rSword.visible = true;
-      put(D.hans, 30.8, 0, 0.8, 0.35); put(D.vill[3], 34.6, 0, 0.6, -0.45); pose3(D.hans, 'idle', t); pose3(D.vill[3], 'idle', t, 2);
-      mv(u, V(32.0, 1.4, 7.6), V(32.0, 1.45, 6.9), V(32.3, 1.7, 1.6), V(32.3, 1.7, 1.6), 50); tag(D.ritter, 'Ritter', WHITE, 0.5); tag(D.hans, 'Hans', HERO); eff(wt(124), 'Schutz', 'vom Ritter', '#55ffff', 'shield'); }
+    if (sh.id === 'protect') { ctr = V(40, 0, 2); put(D.ritter, 40.6, 0, 3.2, -0.2); pose(D.ritter, 'fist', t); D.rSword.visible = true;
+      put(D.hans, 38.8, 0, 1.4, 0.35); put(D.vill[3], 42.4, 0, 1.2, -0.45); pose3(D.hans, 'idle', t); pose3(D.vill[3], 'idle', t, 2);
+      mv(u, V(40.0, 1.4, 8.4), V(40.0, 1.45, 7.7), V(40.3, 1.7, 2.2), V(40.3, 1.7, 2.2), 50); tag(D.ritter, 'Ritter', WHITE, 0.5); tag(D.hans, 'Hans', HERO); eff(wt(124), 'Schutz', 'vom Ritter', '#55ffff', 'shield'); }
     if (sh.id === 'bishop') { ctr = V(45, 0, -5); put(D.bischof, 45.6, 0, -5.0, 0); pose(D.bischof, 'write', t);
-      mv(u, V(47.2, 2.3, -1.2), V(46.9, 2.25, -1.8), V(45.6, 1.6, -4.6), V(45.6, 1.6, -4.6), 46); tag(D.bischof, 'Bischof', WHITE); info(wt(126), 'Bischof Adalbero, um 1030'); }
+      mv(u, V(47.6, 2.4, -0.4), V(47.3, 2.35, -1.0), V(45.6, 1.6, -4.6), V(45.6, 1.6, -4.6), 46); tag(D.bischof, 'Adalbero', WHITE); info(wt(126), 'Adalbero von Laon, um 1030'); }
     if (sh.id === 'orders') { ctr = V(44, 0, 0); put(D.moench, 42.2, 0, -1.0, 0.35); pose3(D.moench, 'kneel', t); D.moench.userData.armR.rotation.x = -1.6; D.moench.userData.armL.rotation.x = -1.6; D.moench.userData.head.rotation.x = 0.2;
       put(D.ritter, 44.0, 0, -1.4, 0); pose(D.ritter, 'fist', t, 1); D.rSword.visible = true; put(D.hans, 45.8, 0, -1.0, -0.35); pose(D.hans, 'work', t, 2);
       mv(u, V(44.0, 2.0, 4.6), V(44.0, 1.95, 3.9), V(44.0, 1.4, -1.2), V(44.0, 1.4, -1.2), 50);
-      if (t >= wt(130)) tag(D.moench, 'Beten', WHITE, -0.3); if (t >= wt(133)) tag(D.ritter, 'Kämpfen', WHITE, 0.5); if (t >= wt(136)) tag(D.hans, 'Arbeiten', HERO); }
-    if (sh.id === 'god') { mood = 'gold'; ctr = V(44, 0, -12); mv(u, V(38, 1.2, 10), V(37.5, 1.5, 8.8), V(44, 13, -8), V(44, 15, -8), 50); chat(wt(143), gray('Jahrhunderte vergehen …')); }
-    if (sh.id === 'plague') { mood = 'night'; ctr = V(33, 0, 4); put(D.moench, 32.0, 0, 3.6, 0.5); pose3(D.moench, 'sadidle', t); D.moench.userData.setFace({ sad: true });
-      put(D.vill[2], 34.6, 0, 2.6, -0.5); pose(D.vill[2], 'fist', t); D.forks[2].visible = true; D.vill[2].userData.armR.rotation.x = -2.4;
-      mv(u, V(33.2, 2.0, 8.6), V(33.1, 1.95, 7.9), V(33.2, 1.5, 3.0), V(33.2, 1.5, 3.0), 48); info(wt(149), red('1347: Die Pest kommt')); }
-    if (sh.id === 'third') { mood = 'night'; ctr = V(59, 0, 2); [[D.vill[1], 57.2], [D.vill[3], 59.2], [D.vill[4], 61.2]].forEach(([p, x], i) => { put(p, x, 0, 6.4, [0.25, 0, -0.25][i]); pose3(p, 'sadidle', t, i); p.userData.setFace({ sad: true }); });
+      if (t >= wt(130)) tag(D.moench, 'beten', WHITE, -0.3); if (t >= wt(133)) tag(D.ritter, 'kämpfen', WHITE, 0.5); if (t >= wt(136)) tag(D.hans, 'arbeiten', HERO); }
+    if (sh.id === 'god') { mood = 'gold'; ctr = V(44, 0, -12); mv(u, V(53, 1.4, 4), V(52.4, 1.6, 3.2), V(44, 13, -8), V(44, 15, -8), 50); chat(wt(143), gray('Jahrhunderte vergehen …')); }
+    if (sh.id === 'plague') { mood = 'night'; ctr = V(27, 0, 2); put(D.moench, 26.6, 0, 2.8, 0.5); pose3(D.moench, 'sadidle', t); D.moench.userData.setFace({ sad: true });
+      put(D.vill[2], 27.9, 0, 2.4, -0.5); pose(D.vill[2], 'fist', t); D.forks[2].visible = true; D.vill[2].userData.armR.rotation.x = -2.4;
+      mv(u, V(27.3, 2.0, 8.6), V(27.25, 1.95, 7.9), V(27.25, 1.45, 2.6), V(27.25, 1.45, 2.6), 48); info(wt(149), red('1347: Die Pest kommt')); }
+    if (sh.id === 'third') { mood = 'night'; ctr = V(59, 0, 2); [[D.vill[1], 58.4], [D.vill[3], 59.2], [D.vill[4], 60.0]].forEach(([p, x], i) => { put(p, x, 0, 6.8, [0.25, 0, -0.25][i]); pose3(p, 'sadidle', t, i); p.userData.setFace({ sad: true }); });
       if (t >= wt(157) + 0.1) D.vill[4].visible = false;
-      mv(u, V(59.2, 2.0, 11.4), V(59.2, 1.95, 10.7), V(59.2, 1.3, 5.6), V(59.2, 1.3, 5.6), 48); if (D.vill[4].visible) tag(D.vill[4], 'Bauer', ALLY); tag(D.vill[1], 'Bauer', ALLY); tag(D.vill[3], 'Bauer', ALLY);
+      mv(u, V(59.2, 2.0, 12.0), V(59.2, 1.95, 11.3), V(59.2, 1.3, 6.6), V(59.2, 1.3, 6.6), 48); 
       chat(wt(157) + 0.1, red('Jeder Dritte stirbt an der Pest')); }
     if (sh.id === 'fields') { ctr = V(68, 0, -20); put(D.hans, 66.4, 0, -16.6, 0.4); pose3(D.hans, 'idle', t); D.hans.userData.head.rotation.y = Math.sin(t * 1.5) * 0.4;
       mv(u, V(69.6, 2.0, -11.4), V(69.2, 1.95, -12.2), V(66.6, 1.3, -17.2), V(66.6, 1.3, -17.2), 48); tag(D.hans, 'Hans', HERO);
-      chat(wt(163), gray('Arbeiter gesucht!')); eff(wt(168), 'Bauern', 'wertvoll', '#55ff55', 'up'); }
+      chat(wt(163), gray('Arbeiter gesucht!')); eff(wt(168), 'Arbeitskraft', 'wertvoll', '#55ff55', 'up'); }
     if (sh.id === 'demand') { ctr = V(24, 0, -11); put(D.hans, 22.8, 0, -9.2, 0.75); pose(D.hans, 'fist', t); D.hansHoe.visible = false;
       put(D.graf, 25.0, 0, -11.4, -0.6); pose3(D.graf, 'cross', t, 1); D.graf.userData.setFace({ angry: true });
-      mv(u, V(24.4, 1.8, -5.4), V(24.3, 1.75, -6.0), V(23.9, 1.4, -10.4), V(23.9, 1.4, -10.4), 46); tag(D.hans, 'Hans', HERO); tag(D.graf, 'Grundherr', WHITE);
+      mv(u, V(24.0, 1.95, -3.4), V(24.0, 1.9, -4.1), V(23.9, 1.3, -10.4), V(23.9, 1.3, -10.4), 50); tag(D.hans, 'Hans', HERO); tag(D.graf, 'Grundherr', WHITE);
       say(wt(171), 'Hans', HERO, 'Mehr Lohn!'); say(wt(174), 'Hans', HERO, 'Mehr Freiheit!'); }
-    if (sh.id === 'revolt') { mood = 'dusk'; ctr = V(86, 0, 32); D.vill.forEach((p, i) => { const c = i % 5, r = Math.floor(i / 5); put(p, 83 + c * 1.5 + r * 0.7, 0, 31.6 + r * 1.6 + (c % 2) * 0.4, (2 - c) * 0.08); pose(p, 'fist', t, i); D.forks[i].visible = true; });
-      put(D.hans, 86.2, 0, 30.4, 0); pose(D.hans, 'fist', t, 3); D.hansHoe.visible = true; D.hans.userData.setFace({ angry: true }); D.vill.forEach(p => p.userData.setFace({ angry: true }));
-      mv(u, V(86.4, 1.6, 26.0), V(86.3, 1.7, 26.8), V(86.4, 2.0, 32.0), V(86.4, 2.2, 32.0), 50); tag(D.hans, 'Hans', HERO); info(wt(177), '1525: Bauernkrieg'); }
+    if (sh.id === 'revolt') { mood = 'dusk'; ctr = V(86, 0, 32); D.vill.forEach((p, i) => { const c = i % 5, r = Math.floor(i / 5); put(p, 83 + c * 1.5 + r * 0.7, 0, 31.6 + r * 1.6 + (c % 2) * 0.4, Math.PI + (2 - c) * 0.08); pose(p, 'fist', t, i); D.forks[i].visible = true; });
+      put(D.hans, 86.2, 0, 30.4, Math.PI); pose(D.hans, 'fist', t, 3); D.hansHoe.visible = false; D.hans.userData.setFace({ angry: true }); D.vill.forEach(p => p.userData.setFace({ angry: true }));
+      mv(u, V(86.4, 2.0, 24.2), V(86.3, 2.05, 25.0), V(86.4, 1.8, 32.0), V(86.4, 2.0, 32.0), 50); tag(D.hans, 'Hans', HERO); info(wt(177), '1525: Aufstand'); }
     if (sh.id === 'crushed') { mood = 'dusk'; ctr = V(86, 0, 30); const adv = (t - sh.a) * 0.6;
-      D.knights.forEach((k, i) => { put(k, 82.6 + i * 1.6, 0, 27.8 - adv, Math.PI + (2 - i) * 0.06); pose(k, 'fist', t, i); k.userData.setFace({ angry: true }); });
-      mv(u, V(92.0, 2.4, 22.6), V(91.4, 2.3, 22.0), V(85.6, 1.6, 27.2), V(85.6, 1.6, 27.0), 46);
-      const kk = D.knights[3]; kk.rotation.y = Math.PI + 0.6; tag(kk, 'Heer der Fürsten', BAD, 0.0); D.fallen.visible = false; }
-    if (sh.id === 'dead') { mood = 'dusk'; ctr = V(86, 0, 32); mv(u, V(88.5, 2.8, 39.5), V(88.2, 2.6, 38.6), V(86.4, 0.6, 32.0), V(86.4, 0.6, 32.0), 46); chat(wt(191) + 0.1, gray('Zehntausende Bauern sterben')); }
-    if (sh.id === 'germany') { ctr = V(56, 0, 6); const w = clamp01((t - sh.a) / (sh.b - sh.a)); put(D.freeman, lerp(51.6, 55.4, w), 0, 6.0, Math.PI / 2 - 0.55); pose3(D.freeman, 'walk', t);
-      D.freeman.userData.setFace({ smile: true }); mv(u, V(58.6, 1.8, 10.6), V(58.2, 1.75, 10.0), V(53.6, 1.4, 6.0), V(54.4, 1.4, 6.0), 46);
-      tag(D.freeman, 'Bauer', ALLY); info(wt(216), 'Deutschland, 19. Jahrhundert'); toast(wt(220), 'Fortschritt erzielt!', 'Leibeigenschaft beendet', 'key'); }
+      D.knights.forEach((k, i) => { put(k, 82.6 + i * 1.6, 0, 24.5 + adv, (2 - i) * 0.06); pose(k, 'fist', t, i); k.userData.setFace({ angry: true }); });
+      mv(u, V(92.5, 2.4, 31.0), V(91.8, 2.3, 30.4), V(85.6, 1.5, 26.5), V(85.6, 1.5, 26.8), 46);
+      const kk = D.knights[3]; tag(kk, 'Heer der Fürsten', BAD, 0.0); D.fallen.visible = false; }
+    if (sh.id === 'dead') { mood = 'dusk'; ctr = V(86, 0, 32); mv(u, V(88.5, 2.8, 39.5), V(88.2, 2.6, 38.6), V(86.4, 0.6, 32.0), V(86.4, 0.6, 32.0), 46); chat(wt(191) + 0.1, gray('Zehntausende sterben')); }
+    if (sh.id === 'germany') { ctr = V(56, 0, 6); const w = clamp01((t - sh.a) / (sh.b - sh.a)); put(D.freeman, lerp(48.8, 53.4, w), 0, 6.0, Math.PI / 2 - 0.55); pose3(D.freeman, 'walk', t);
+      D.freeman.userData.setFace({ smile: true }); mv(u, V(57.4, 1.8, 10.8), V(57.0, 1.75, 10.2), V(51.4, 1.4, 6.0), V(52.6, 1.4, 6.0), 46);
+      tag(D.freeman, 'Freier Mann', ALLY); info(wt(216), 'Deutschland, 19. Jahrhundert'); toast(wt(220), 'Fortschritt erzielt!', 'Leibeigenschaft beendet', 'key'); }
     if (sh.id === 'forest') { ctr = V(-158, 0, -18); if (!privDrawn) { drawPrivSign(); privDrawn = true; }
-      put(D.modgraf, -159.2, 0, -17.6, 0.35); pose3(D.modgraf, 'cross', t);
-      mv(u, V(-157.0, 1.9, -12.4), V(-157.3, 1.85, -13.1), V(-158.4, 1.6, -18.2), V(-158.4, 1.6, -18.2), 48); tag(D.modgraf, 'Adelsfamilie', WHITE); info(wt(227), 'Heute'); }
-    exp = setMood(mood, ctr);
+      put(D.modgraf, -158.5, 0, -17.6, 0.3); pose3(D.modgraf, 'cross', t);
+      mv(u, V(-156.8, 1.95, -10.8), V(-157.0, 1.9, -11.5), V(-157.8, 1.6, -18.0), V(-157.8, 1.6, -18.0), 50); tag(D.modgraf, 'Adelsfamilie', WHITE); info(wt(227), 'Heute'); }
+    exp = setMood(mood, ctr); WD.cloudM.visible = sh.id !== 'god';
   }
   // ---------- Thronsaal ----------
   if (['king', 'grant', 'lehen', 'oath'].includes(sh.id)) {
@@ -658,14 +659,14 @@ function render(frame) {
     if (sh.id === 'king') { put(H_.koenig, 0, 0.4, -11.0, 0); pose3(H_.koenig, 'idle', t); sitPose(H_.koenig, 0.95); H_.koenig.userData.armL.rotation.x = H_.koenig.userData.armR.rotation.x = -1.0;
       mv(u, V(0, 2.2, -3.0), V(0, 2.1, -4.4), V(0, 1.6, -11), V(0, 1.6, -11), 50); tag(H_.koenig, 'König', BAD); info(wt(26), 'Alles Land gehört dem König'); }
     if (sh.id === 'grant') { put(H_.koenig, 0, 0.4, -9.6, 0); pose3(H_.koenig, 'give', t); H_.scroll.visible = true;
-      put(H_.fuerst, -1.5, 0, -7.6, 0.5); put(H_.graf, 1.5, 0, -7.6, -0.5); pose3(H_.fuerst, 'kneel', t); pose3(H_.graf, 'kneel', t, 1); H_.fuerst.userData.armR.rotation.x = -0.2; H_.graf.userData.armR.rotation.x = -0.2;
-      mv(u, V(0, 2.2, -2.6), V(0, 2.1, -3.4), V(0, 1.3, -8.6), V(0, 1.3, -8.6), 48); tag(H_.koenig, 'König', BAD); tag(H_.fuerst, 'Fürst', WHITE, -0.3); tag(H_.graf, 'Graf', WHITE, -0.3); }
-    if (sh.id === 'lehen') { put(H_.koenig, 0.6, 0.4, -9.4, -0.6); pose3(H_.koenig, 'give', t); H_.scroll.visible = true; put(H_.fuerst, -0.5, 0, -8.0, 0.6); pose3(H_.fuerst, 'kneel', t); H_.fuerst.userData.armR.rotation.x = -1.5; H_.fuerst.userData.armL.rotation.x = -1.4;
-      mv(u, V(0.6, 1.6, -5.2), V(0.55, 1.58, -5.7), V(0.05, 1.15, -8.8), V(0.05, 1.15, -8.8), 46); tag(H_.fuerst, 'Fürst', WHITE, -0.3);
+      put(H_.fuerst, -0.95, 0, -7.9, 0.5); put(H_.graf, 0.95, 0, -7.9, -0.5); pose3(H_.fuerst, 'kneel', t); pose3(H_.graf, 'kneel', t, 1); H_.fuerst.userData.armR.rotation.x = -0.2; H_.graf.userData.armR.rotation.x = -0.2;
+      mv(u, V(0, 2.4, -1.2), V(0, 2.3, -2.0), V(0, 1.2, -8.8), V(0, 1.2, -8.8), 48); tag(H_.koenig, 'König', BAD); tag(H_.fuerst, 'Fürst', WHITE, -0.3); tag(H_.graf, 'Graf', WHITE, -0.3); }
+    if (sh.id === 'lehen') { put(H_.koenig, 0.55, 0.4, -9.3, -0.7); pose3(H_.koenig, 'give', t); H_.scroll.visible = true; put(H_.fuerst, -0.45, 0, -8.1, 0.75); pose3(H_.fuerst, 'kneel', t); H_.fuerst.userData.armR.rotation.x = -1.5; H_.fuerst.userData.armL.rotation.x = -1.4;
+      mv(u, V(1.1, 1.6, -4.6), V(1.0, 1.57, -5.1), V(0.0, 1.15, -8.7), V(0.0, 1.15, -8.7), 46); tag(H_.fuerst, 'Fürst', WHITE, -0.3);
       tip(wt(46) - 0.03, 'scroll', 'Lehen', '#ffaa00', [gray('lat. feudum'), gray('Land gegen Treue')]); }
     if (sh.id === 'oath') { put(H_.koenig, 0.75, 0.4, -9.2, -0.75); pose3(H_.koenig, 'idle', t); H_.koenig.userData.armR.rotation.x = -1.2; H_.koenig.userData.armL.rotation.x = -1.2;
       put(H_.fuerst, -0.4, 0, -8.0, 0.55); pose3(H_.fuerst, 'kneel', t); H_.fuerst.userData.armR.rotation.x = -1.35; H_.fuerst.userData.armL.rotation.x = -1.35; H_.fuerst.userData.head.rotation.x = -0.15;
-      mv(u, V(-1.0, 1.5, -4.4), V(-0.9, 1.48, -5.0), V(0.1, 1.15, -8.6), V(0.1, 1.15, -8.6), 46); tag(H_.koenig, 'König', BAD); tag(H_.fuerst, 'Fürst', WHITE, -0.3);
+      mv(u, V(-1.5, 1.6, -3.6), V(-1.4, 1.57, -4.2), V(0.1, 1.15, -8.6), V(0.1, 1.15, -8.6), 46); tag(H_.koenig, 'König', BAD); tag(H_.fuerst, 'Fürst', WHITE, -0.3);
       chat(wt(50), green('Fürst schwört dem König Treue')); chat(wt(55), gray('Pflicht: Kriegsdienst')); }
   }
   // ---------- Paris ----------
