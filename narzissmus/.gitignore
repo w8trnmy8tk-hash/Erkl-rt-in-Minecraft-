@@ -4,3 +4,7 @@ test/
 *.jpg
 audio/ts_*.json
 audio/req_*.json
+frames2/
+*.log
+audio/pre.wav
+audio/*_alt.*

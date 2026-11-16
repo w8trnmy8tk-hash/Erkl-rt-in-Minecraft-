@@ -28,7 +28,7 @@ if cur: words.append([cur, st, last])
 pcm = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'vo_raw.mp3', '-f', 's16le', '-ac', '1', '-ar', str(SR), '-'], capture_output=True).stdout, np.int16).astype(np.float32) / 32768
 
 # ---------- Knackser reparieren ----------
-def declick(x, thr=6000):
+def declick(x, thr=5000):
     F = np.fft.rfft(x); f = np.fft.rfftfreq(len(x), 1 / SR)
     hp = np.fft.irfft(np.where(f >= 9000, F, 0), len(x)); lp = np.fft.irfft(np.where(f < 6000, F, 0), len(x))
     W = 88; k = len(x) // W; b = (hp[:k * W] ** 2).reshape(k, W).mean(1)
@@ -86,6 +86,7 @@ res = np.concatenate(pieces); j = 0
 for k in range(len(pieces) - 1):  # Naht in Stille: weich aus- und einblenden
     j += len(pieces[k]); n = min(L, j, len(res) - j)
     if n > 1: res[j - n:j] *= np.cos(np.linspace(0, np.pi / 2, n)) ** 2; res[j:j + n] *= np.sin(np.linspace(0, np.pi / 2, n)) ** 2
+res, nclick2 = declick(res); nclick += nclick2  # zweiter Durchgang auf dem Ergebnis
 def f(t):
     smp = t * SR; dd = 0
     for x, dl in mapping:

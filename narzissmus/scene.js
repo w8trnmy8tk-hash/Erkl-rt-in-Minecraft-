@@ -405,7 +405,7 @@ function drawSign() {
 // =====================================================================
 const words = await (await fetch('words.json')).json();
 const wt = i => words[i][1];
-const SPEECH_END = 74.245; // hörbares Ende der Sprache (gemessen)
+const SPEECH_END = 73.75; // hörbares Ende der Sprache (gemessen)
 const DUR = Math.round((SPEECH_END + 0.16) * 30) / 30; // Loop-Pause ≈ Satzpause
 const WHIP0 = wt(1), WHIP1 = wt(1) + 0.57;
 const CUTS = [[0, 'hero'], [4, 'greece'], [8, 'reject'], [17, 'echo'], [21, 'punish'], [32, 'waste'], [41, 'flower'], [49, 'echovoice'], [56, 'today'], [61, 'everyone'],
