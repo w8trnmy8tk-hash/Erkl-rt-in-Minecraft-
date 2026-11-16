@@ -404,7 +404,7 @@ function drawSign() {
 // =====================================================================
 const words = await (await fetch('words.json')).json();
 const wt = i => words[i][1];
-const DUR = 60.2;
+const DUR = 1804 / 30; // Ende so gesetzt, dass Pause am Loop-Übergang = Satzpause (~0,23 s)
 const WHIP0 = wt(1), WHIP1 = wt(1) + 0.57; // Kranfahrt-Preset: startet auf „erklärt“, Dauer 0,57 s
 const CUTS = [[0, 'hero'], [4, 'internet'], [7, 'sad'], [14, 'flaws'], [23, 'forum'], [29, 'idea'], [38, 'sport'], [42, 'skin'], [43, 'sleep'], [44, 'hair'],
   [47, 'works'], [50, 'happy'], [58, 'more'], [63, 'mew'], [73, 'jaw'], [77, 'measure'], [81, 'rate'], [89, 'scale'], [99, 'four'], [103, 'mog'],
@@ -444,11 +444,12 @@ function render(frame) {
   // --- Schulhof / Stadt ---
   if (['hero', 'loop', 'mia', 'mia2', 'mia3', 'jog', 'happy'].includes(sh.id)) {
     scene = town; exp = 1.35; const { leon, mia, students, passer, hearts } = town.userData;
-    students.forEach((s, i) => pose2(s, 'idle', t, i)); updateBurst(hearts, -1); leon.userData.setFace({ smile: true });
+    const ta = sh.id === 'loop' ? t - DUR : t; // Loop: gleiche Animationszeit wie am Videoanfang
+    students.forEach((s, i) => pose2(s, 'idle', ta, i)); updateBurst(hearts, -1); leon.userData.setFace({ smile: true });
     if (sh.id === 'hero' || sh.id === 'loop') {
       leon.position.set(-0.75, 0, 0); leon.rotation.y = 0.15; mia.position.set(0.75, 0, 0.1); mia.rotation.y = -0.3;
-      pose2(leon, 'idle', t); pose2(mia, 'idle', t, 2); mia.userData.head.rotation.y = -0.45;
-      const pw = sh.id === 'hero' ? Math.max(0, t - 1.0) : 0; passer.position.set(2.4, 0, -8 + pw * 2.2); passer.rotation.y = 0; pose2(passer, 'walk', t);
+      pose2(leon, 'idle', ta); pose2(mia, 'idle', ta, 2); mia.userData.head.rotation.y = -0.45;
+      const pw = sh.id === 'hero' ? Math.max(0, t - 1.0) : 0; passer.position.set(2.4, 0, -8 + pw * 2.2); passer.rotation.y = 0; pose2(passer, 'walk', sh.id === 'hero' ? t : 0);
       heroCam(sh.id === 'hero' ? t : t - DUR); tag(leon, 'Leon', '#ffd23f'); tag(mia, 'Mia', '#55ffff');
     } else {
       passer.position.set(-40, 0, 0);

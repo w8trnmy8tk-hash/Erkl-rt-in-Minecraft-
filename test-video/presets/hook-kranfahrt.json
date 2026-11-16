@@ -131,5 +131,27 @@
     "sprache": "ca. 65–73 s gesprochener Text",
     "woerter": "ca. 225–250 Wörter bei ~205 Wörtern/min (größere Themen entsprechend mehr)",
     "referenz": "Referenzvideos: 66,8 / 69,8 / 69,4 / 74,2 s"
+  },
+  "nahtloser_loop": {
+    "ziel": "Video wirkt unendlich – man bemerkt den Übergang Ende -> Anfang weder im Bild noch im Ton",
+    "script": "Der letzte Satz endet so, dass er grammatisch/inhaltlich in den Titel übergeht („… vergisst den Menschen dahinter. → Looksmaxxing, erklärt in Minecraft.“). Die letzten 2–4 Wörter laufen schon über dem ersten Bild.",
+    "bild": [
+      "Letzter Shot = erstes Bild (Hook-Two-Shot) mit derselben Kamerafahrt, die nur ZEITLICH VOR dem Start liegt (heroCam(t − DUR)) -> letztes Frame geht 1:1 in Frame 0 über",
+      "Alle Animationen im Loop-Teil mit Zeit t − DUR (Figuren, Statisten, Partikel), feste Objekte in Startposition",
+      "Keine Einblendungen/Tooltips über den Übergang, Namensschilder identisch zum Anfang",
+      "Prüfung: Frame-Unterschied Ende->Anfang (ohne Untertitel) ≈ normaler Frame-Wechsel"
+    ],
+    "ton": [
+      "Videolänge so wählen, dass Stille am Übergang (Ende + Anfang zusammen) ≈ eine Satzpause ist (~0,2–0,35 s)",
+      "KEIN Fade-out am Ende (kein Abfall in Digital-Stille)",
+      "Ende per 15-ms-Überblendung in den Anfang (presets/audio-loop.py) -> kein Klick",
+      "Musik/Atmo (falls vorhanden) muss loopbar sein und am Ende exakt dort stehen, wo sie am Anfang beginnt",
+      "Effekte nicht über den Übergang legen"
+    ],
+    "werkzeuge": {
+      "pruefen": "python3 test-video/presets/loop-check.py video.mp4",
+      "ton_nahtlos": "python3 test-video/presets/audio-loop.py mix_raw.wav mix.wav DAUER"
+    },
+    "beispiel_messung_looksmaxxing": "Bild: 1,33 vs. normal 1,32 (ohne Untertitel) · Ton: Sample-Sprung 0,0001 · Stille am Übergang 0,36 s"
   }
 }

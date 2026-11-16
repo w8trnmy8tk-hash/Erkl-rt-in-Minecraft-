@@ -260,3 +260,22 @@ Gemessen mit Whisper-Wortzeiten an allen 4 Referenzen:
 | Wortdauer (Ø) | 249 ms | 255 ms | 252 ms | 263 ms |
 
 Vorgehen für eigene Videos: Stimme mit speed 1.18 erzeugen, Pausen mit `test-video/presets/pausen-normalisieren.py` kürzen, danach mit Whisper nachmessen. **Videolänge: 1:07–1:15 (67–75 s), bei größeren Themen auch länger** – das entspricht ca. 225–250 Wörtern bei ~205 Wörtern/min.
+
+## 13. Nahtloser Loop (Bild + Ton) – verbindlich
+
+Ziel: Das Video wirkt endlos, der Übergang Ende → Anfang ist weder zu sehen noch zu hören.
+
+**Script:** Der letzte Satz fließt in den Titel („… vergisst den Menschen dahinter. → Looksmaxxing, erklärt in Minecraft.“). Die letzten 2–4 Wörter laufen bereits über dem ersten Bild.
+
+**Bild:**
+- Letzter Shot = erstes Bild mit derselben Kamerafahrt, nur zeitlich davor (`heroCam(t − DUR)`). Das letzte Frame geht 1:1 in Frame 0 über.
+- Alle Animationen im Loop-Teil laufen mit `t − DUR` (Figuren, Statisten, Partikel).
+- Keine Tooltips oder Einblendungen über den Übergang.
+
+**Ton:**
+- Videolänge so wählen, dass die Stille am Übergang (Ende + Anfang) einer Satzpause entspricht (ca. 0,2–0,35 s).
+- Kein Fade-out am Ende.
+- 15 ms Überblendung des Endes in den Anfang (`test-video/presets/audio-loop.py`), damit es nicht klickt.
+- Musik oder Atmo nur loopbar; Effekte nicht über den Übergang legen.
+
+**Prüfen:** `python3 test-video/presets/loop-check.py video.mp4`. Bild-Übergang (ohne Untertitel) ≈ normaler Frame-Wechsel, Ton ohne Sample-Sprung.
