@@ -505,7 +505,7 @@ const words = await (await fetch('words.json')).json();
 const wt = i => words[i][1];
 const ERK = 3; // Wortindex von „erklärt“
 const SPEECH_END = 73.25; // hörbares Ende der Sprache (gemessen, −45 dB)
-const DUR = Math.round((SPEECH_END + 0.16) * 30) / 30;
+const DUR = Math.round((SPEECH_END + 0.26) * 30) / 30; // +0.26: „Satz“ setzt ohne Vorlauf ein, Pause am Loop-Übergang sonst zu kurz
 const WHIP0 = wt(ERK) - 1 / 30, WHIP1 = WHIP0 + 0.57; // wt(ERK) = hörbarer Einsatz „erklärt“ (erklaert-onset.py --idx 3 --fix); 1 Frame Vorlauf
 const CUTS = [[0, 'hero'], [6, 'babylon'], [11, 'builder'], [18, 'crooked'], [28, 'puzzle'], [36, 'scribe'], [42, 'rope'], [54, 'tabletW'], [59, 'tablet'],
   [65, 'greece'], [76, 'school'], [81, 'number'], [88, 'unknown'], [102, 'name'], [110, 'triangle'], [124, 'strange'], [127, 'compare'], [139, 'nine'], [144, 'sixteen'],
