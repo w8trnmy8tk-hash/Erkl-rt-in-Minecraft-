@@ -28,8 +28,9 @@ for i, w in enumerate(words):
         tg = target(w[0], gap)
         avail = ns - M - pos  # Stille zwischen den Rändern
         want = int(tg * SR) - 2 * M
-        if avail > want:   # kürzen: Mitte der Stille entfernen
-            keep = max(0, want); h = keep // 2
+        quiet = lambda x: 20 * np.log10(np.sqrt(np.mean((pcm[max(0, x - 265):x + 265] / 32768) ** 2)) + 1e-9) < -40  # ±6 ms um den Schnitt
+        keep = max(0, want); h = keep // 2
+        if avail > want and avail > 0 and quiet(pos + h) and quiet(ns - M - (keep - h)):   # kürzen: Mitte der Stille entfernen (Schnitt nur in Stille, nie rückwärts)
             out.append(pcm[pos:pos + h]); src.append(pos); b0 = ns - M - (keep - h); out.append(pcm[b0:ns - M]); src.append(b0); pos = ns - M
         elif avail < want and w[0][-1] in '.?!,:;':  # verlängern mit Stille
             out.append(pcm[pos:ns - M]); src.append(pos); out.append(np.zeros(want - avail, np.float32)); src.append(None); pos = ns - M
