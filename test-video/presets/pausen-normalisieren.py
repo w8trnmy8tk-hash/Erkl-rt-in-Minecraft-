@@ -70,7 +70,8 @@ for i in range(len(words) - 1):
     P = r[1] - r[0]; T = int((TP if w[0][-1] in '.?!' else TC if w[0][-1] in ',:;' else min(P / SR, TW)) * SR)
     mid = (r[0] + r[1]) // 2
     if P > T: edits.append((mid - (P - T) // 2, -(P - T)))
-    elif P < T and w[0][-1] in '.?!,:;': edits.append((mid, T - P))
+    elif P < T and w[0][-1] in '.?!,:;' and (P >= int(0.07 * SR) or w[2] - 0.04 <= mid / SR <= nx[1] + 0.01):
+        edits.append((mid, T - P))  # nur echte Pausen dehnen – kurze Lücke nur, wenn sie zwischen den Wörtern liegt (nicht im Verschlusslaut k/t/p eines Worts)
 
 # ---------- Ausführen (mit Überblendung an jeder Naht) ----------
 L = int(0.006 * SR)
