@@ -19,8 +19,8 @@ function tex(w, h, draw, seed = 1) {
   const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
   draw(cv.getContext('2d'), rng(seed), w, h);
   const t = new THREE.CanvasTexture(cv);
-  t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestMipmapLinearFilter;
-  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+  t.magFilter = THREE.NearestFilter; t.minFilter = THREE.LinearMipmapLinearFilter;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 16; return t;
 }
 function px(c, x, y, col) { c.fillStyle = typeof col === 'number' ? hex(col) : col; c.fillRect(x, y, 1, 1); }
 function noiseFill(c, r, w, h, base, amt = 0.1) { for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) px(c, x, y, shade(base, 1 - amt + r() * amt * 2)); }
@@ -323,8 +323,8 @@ function mkFrench(S, o = {}) { const p = humanoid({ ...FRENCH, ...o }); shako(p)
 const spain = new THREE.Scene(); baseScene(spain);
 {
   const S = spain; clouds(S, 5, 0xfff4e8, 75, 16, 260, 0.85);
-  const ground = M(tex(16, 16, (c, r) => { noiseFill(c, r, 16, 16, 0x8a9a52, 0.12); for (let i = 0; i < 20; i++) px(c, Math.floor(r() * 16), Math.floor(r() * 16), 0xa89a5a); }, 101));
-  S.add(box(900, 1, 900, ground, 0, -0.5, 0, { cast: false }));
+  const ground = M(tex(16, 16, (c, r) => { noiseFill(c, r, 16, 16, 0x8a9a52, 0.04); for (let i = 0; i < 8; i++) px(c, Math.floor(r() * 16), Math.floor(r() * 16), 0x92985a); }, 101));
+  S.add(box(900, 1, 900, ground, 0, -0.5, 0, { cast: false, uvScale: 0.5 }));
   const dirtM = M(tex(16, 16, (c, r) => noiseFill(c, r, 16, 16, 0xb89a6a, 0.1), 102));
   S.add(box(220, 0.06, 3.6, dirtM, 0, 0.03, -20, { cast: false })); // Straße
   S.add(box(3, 0.06, 26, dirtM, 30, 0.03, -33, { cast: false }));
@@ -376,7 +376,7 @@ const spain = new THREE.Scene(); baseScene(spain);
 const viet = new THREE.Scene(); baseScene(viet);
 {
   const S = viet; clouds(S, 8, 0xffffff, 70, 22, 260, 0.9);
-  S.add(box(900, 1, 900, jungleM, 0, -0.5, 0, { cast: false }));
+  S.add(box(900, 1, 900, M(tex(16, 16, (c, r) => noiseFill(c, r, 16, 16, 0x427a30, 0.05), 67)), 0, -0.5, 0, { cast: false, uvScale: 0.5 }));
   const river = new THREE.Mesh(new THREE.PlaneGeometry(400, 10), waterM); river.rotation.x = -Math.PI / 2; river.position.set(0, 0.04, -34); S.add(river);
   // Reisfelder
   for (let i = 0; i < 3; i++) for (let k = 0; k < 2; k++) { const x = 8 + i * 7.4, z = 12 + k * 7.4; S.add(box(7.4, 0.3, 0.4, C(0x6a5a3a), x, 0.15, z - 3.7)); S.add(box(0.4, 0.3, 7.4, C(0x6a5a3a), x - 3.7, 0.15, z));
@@ -493,7 +493,7 @@ function drawSign() {
 // =====================================================================
 const words = await (await fetch('words.json')).json();
 const wt = i => words[i][1];
-const SPEECH_END = 73.155; // hörbares Ende der Sprache (gemessen, −45 dB)
+const SPEECH_END = 73.355; // hörbares Ende der Sprache (gemessen, −45 dB)
 const DUR = Math.round((SPEECH_END + 0.16) * 30) / 30;
 const WHIP0 = wt(1) - 1 / 30, WHIP1 = WHIP0 + 0.57; // wt(1) = hörbarer Einsatz „erklärt“ (erklaert-onset.py --fix)
 const CUTS = [[0, 'hero'], [4, 'spain'], [9, 'occupy'], [15, 'defeated'], [20, 'farmers'], [26, 'paths'], [33, 'battle'], [42, 'ambush'], [47, 'vanish'], [51, 'more'], [65, 'term'],
