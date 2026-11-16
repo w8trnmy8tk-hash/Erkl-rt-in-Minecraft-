@@ -122,8 +122,14 @@
     "pause_nach_komma_ms": "Ø 170–225 (Ziel ~190)",
     "pause_nach_punkt_ms": "Ø 200–260, max ~450 (Ziel ~250)",
     "wortdauer_ms": "Ø 250",
-    "laenge": "mindestens 60 s Sprache, ca. 200–210 Wörter",
+    "laenge": "siehe videolaenge: 67–75 s, ca. 225–250 Wörter",
     "vorgehen": "ElevenLabs mit speed 1.18 erzeugen, dann Pausen mit presets/pausen-normalisieren.py kürzen (Ziel im Schnitt: 0.11 s nach Punkt, 0.09 s nach Komma – Whisper misst ca. +90 ms), danach mit Whisper gegen die Referenzwerte prüfen",
     "messung_methode": "faster-whisper medium, word_timestamps, Lücke = Start(n+1) − Ende(n), getrennt nach Satzzeichen"
+  },
+  "videolaenge": {
+    "ziel": "1:07–1:15 (67–75 s), bei größeren Themen auch länger",
+    "sprache": "ca. 65–73 s gesprochener Text",
+    "woerter": "ca. 225–250 Wörter bei ~205 Wörtern/min (größere Themen entsprechend mehr)",
+    "referenz": "Referenzvideos: 66,8 / 69,8 / 69,4 / 74,2 s"
   }
 }

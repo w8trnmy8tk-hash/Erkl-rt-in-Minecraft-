@@ -259,4 +259,4 @@ Gemessen mit Whisper-Wortzeiten an allen 4 Referenzen:
 | Pause nach Punkt (Ø / max) | 239 / 380 ms | 257 / 900 ms | 215 / 500 ms | 197 / 480 ms |
 | Wortdauer (Ø) | 249 ms | 255 ms | 252 ms | 263 ms |
 
-Vorgehen für eigene Videos: Stimme mit speed 1.18 erzeugen, Pausen mit `test-video/presets/pausen-normalisieren.py` kürzen, danach mit Whisper nachmessen. Mindestens 60 s Sprache (ca. 200–210 Wörter).
+Vorgehen für eigene Videos: Stimme mit speed 1.18 erzeugen, Pausen mit `test-video/presets/pausen-normalisieren.py` kürzen, danach mit Whisper nachmessen. **Videolänge: 1:07–1:15 (67–75 s), bei größeren Themen auch länger** – das entspricht ca. 225–250 Wörtern bei ~205 Wörtern/min.
