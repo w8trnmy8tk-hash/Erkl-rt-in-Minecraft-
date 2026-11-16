@@ -39,7 +39,7 @@ def declick(x, thr=5000):
         lo, hi = max(0, c0 - L), min(len(x), c0 + L); win = np.sin(np.linspace(0, np.pi, hi - lo)) ** 2
         y[lo:hi] = x[lo:hi] * (1 - win) + lp[lo:hi] * win; n += 1
     return y, n
-pcm, nclick = declick(pcm)
+pcm, nclick = declick(pcm, float(__import__("os").environ.get("KNACK_THR", 5000)))
 
 # ---------- Stille finden ----------
 H = 220  # 5 ms
