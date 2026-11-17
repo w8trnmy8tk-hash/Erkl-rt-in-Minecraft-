@@ -10,11 +10,12 @@ Details und Messwerte: `analyse/video-analyse.md`, `test-video/presets/hook-kran
 ## 1. Format
 - 1080×1920, 30 fps, H.264 + AAC, Loudness **exakt −14 LUFS**
 - **Sprache: Deutsch**
-- **Länge: 1:07–1:15 (67–75 s)**, bei größeren Themen auch länger → ca. 245–255 Wörter
+- **Länge: 1:08–1:15 (68–75 s)**, nie unter 68 s (TikTok belohnt nur > 60 s); bei großen Themen 85–95 s testen → ca. 245–255 Wörter (länger entsprechend mehr)
 - **Stimme: ElevenLabs „Mark – Casual, Relaxed and Light“** (`1SM7GgM6IMuvQlz2BwM3`), `eleven_multilingual_v2`, language_code `de`, stability 0.5, similarity 0.8, style 0.1, speed ≈1.14–1.17 (anpassen, bis Tempo stimmt). Die natürliche, lebendige Stimmlage ist wichtiger als exakte Messwerte – eine monotone Aufnahme verwerfen.
 - **Keine Musik. Kein Whoosh bei der Kranfahrt** (Nutzerwunsch). Nur leiser Pop bei Tooltips, selten Chime (Toast) / Poof (Verschwinden), nie über dem Loop-Übergang
 
 ## 2. Script-Aufbau (wie Referenzen)
+0. **Thema werbefreundlich wählen (RPM, siehe §10):** Wissenschaft, Geschichte, Technik, Natur, Wirtschaft, Alltagsphänomene. Bei Aussehen/Körper, Dating, Politik, Gewalt/Strafe, Psychopathologie den Nutzer kurz auf niedrigen RPM hinweisen (trotzdem umsetzen, wenn gewünscht)
 1. `[Thema], erklärt in Minecraft.`
 2. Ort + Zeit (`Griechenland, vor 2000 Jahren.`) → harter Schnitt auf das Ortswort, Establishing-Totale + `[Info]`-Label
 3. Hauptfigur(en) + Normalzustand, dann „Dann / Doch / Bis …“ → Eskalation, ein Beat pro Satz
@@ -22,6 +23,8 @@ Details und Messwerte: `analyse/video-analyse.md`, `test-video/presets/hook-kran
 5. Auflösung in 1–2 Sätzen
 6. `[Autor/Quelle] zeigt: [Kernaussage ≤ 10 Wörter].` → Schild bei Sonnenuntergang (rote Zeile `AUTOR, JAHR`, darunter die Aussage)
 7. Der letzte Satz fließt in den Titel; seine letzten 2–4 Wörter laufen schon über dem ersten Bild (Loop)
+- **Offene Frage/Regel in Satz 2–3**, die erst in der Auflösung beantwortet wird; Spannungsbeat bei ~30 s und ~60 s; mindestens eine Wendung („Doch …“) → Ziel Abschlussrate > 30 %
+- Der Fachbegriff wird gesprochen UND eingeblendet (Suchwert)
 - Kurze Hauptsätze, Präsens, Figuren mit Rollen-Etikett einführen, Fakten korrekt (Jahreszahlen/Quellen prüfen), sensible Themen verantwortungsvoll und ausgewogen (Mythen klar als übertrieben benennen, nichts Gefährliches zeigen)
 - Zahlen im Script ausschreiben („zweitausend“, „neunzehnhundertsiebenundsiebzig“) – im Untertitel als Ziffern (NUM-Tabelle in `drawUI`)
 
@@ -54,6 +57,9 @@ Details und Messwerte: `analyse/video-analyse.md`, `test-video/presets/hook-kran
 - **Kein Bloom, keine Tiefenunschärfe, keine Vignette, keine Partikel-Deko, kein Motion Blur**
 - Weiche Schatten (PCFSoft), ACES-Tonemapping, Tag = warme Sonne, Gefahr/Nacht = kühles Licht + warme Lichtquellen
 - Eigene Pixeltexturen und Voxel-Figuren (keine Mojang-Assets/-Fonts); Untertitel-Font Montserrat 800, Pixel-Font Pixelify Sans
+- **Jedes Video sieht neu aus (Originalität):** Minecraft-Optik bleibt, aber eigene Orte, Möbel, Blocktexturen pro Thema. Kein Raum/keine Straße/Fassade aus einem früheren Video übernehmen (z. B. Narzissmus und Looksmaxxing teilten dasselbe Zimmer – nicht wiederholen). `hypergamie/` ist Vorlage für Code/Technik, NICHT für Kulissen
+- **Star-Objekt:** ein großes, detailliertes Voxel-Hauptmotiv zum Thema (z. B. Riesenspiegel bei Narzissmus), 3–4× im Video (Establishing, Höhepunkt, Schild-Shot) und auf dem Cover
+- **Figuren mit Charakter:** Hauptfiguren mit eigenem Skin (Haare, Kleidung, Accessoire) und Mimik (Blinzeln, Augenbrauen, Mund bei Reveal/Schock); Menschenmengen mit ≥ 6 verschiedenen Skins
 - Pixel-Font kann kein „§“ und „B“ sieht wie „8“ aus → in Tooltips/Labels Abkürzungen wie „BGB“, „§“ vermeiden
 
 ## 7. UI-Ebene (Positionen wie Referenz)
@@ -76,3 +82,12 @@ Details und Messwerte: `analyse/video-analyse.md`, `test-video/presets/hook-kran
 - Vor dem Voll-Render: pro Shot ein Testbild rendern (Kontaktbogen) und ansehen, Fehler beheben
 - Zwei Render-Prozesse parallel (~12–35 min); danach `ton-mischen.py`, ffmpeg-Mux, `loop-check.py`, `knacks-pruefen.py`, Whisper-Tempomessung, Kranfahrt-Sync prüfen
 - Nach Fertigstellung: Qualitätstabelle (Länge, Tempo, Pausen, Shotlänge, Loop, Lautheit, Sync) + ehrliche Schwächen melden, committen, pushen, Video senden
+
+## 10. RPM / Belohnungsprogramm (TikTok) – Pflicht
+Hintergrund und Belege: `analyse/rpm-analyse.md`. RPM = Standardbelohnung (≈ €0,05–0,11) + Zusätzliche Belohnung (Qualitäts-Multiplikator, bis ~19×). Die Zusatzbelohnung gibt es nur bei Inhaltsqualität „Ausgezeichnet“.
+- Voraussetzungen: > 60 s, eigenes Material, For-You-tauglich (kein Body-Shaming/Körperbild, keine Gewalt), keine Richtlinien-Verstöße
+- Qualifizierte Aufrufe zählen erst ab 5 s → die ersten 5 s müssen halten (starker erster Satz, klares erstes Bild)
+- Bewertet werden Ø Wiedergabezeit, Bindung 30/60 s, Abschlussrate, Suchwert, Machart/Originalität, Werbefreundlichkeit des Themas
+- **Keine Varianten derselben Geschichte** (gleiche Story mit neuem Rahmen → „Standard“, €0 extra)
+- **Coverbild pro Video:** `<projekt>/cover.png` (1080×1920) rendern: Star-Objekt groß, Hauptfigur mit deutlicher Mimik, 2–3 Wörter Titel oben (nicht im Untertitelbereich); mitliefern
+- **Hinweise zum Hochladen (dem Nutzer mitgeben):** suchbarer Titel („Was ist X? Erklärt in Minecraft“), passende Hashtags (#minecraft #erklärt #lernen + Thema, kein #roblox), KI-Label setzen, falls TikTok es anbietet; ein Video pro Thema; in TikTok Studio nach RPM statt Aufrufen auswerten
