@@ -84,10 +84,10 @@ Details und Messwerte: `analyse/video-analyse.md`, `test-video/presets/hook-kran
 - Nach Fertigstellung: Qualitätstabelle (Länge, Tempo, Pausen, Shotlänge, Loop, Lautheit, Sync) + ehrliche Schwächen melden, committen, pushen, Video senden
 
 ## 10. RPM / Belohnungsprogramm (TikTok) – Pflicht
-Hintergrund und Belege: `analyse/rpm-analyse.md`. RPM = Standardbelohnung (≈ €0,05–0,11) + Zusätzliche Belohnung (Qualitäts-Multiplikator, bis ~19×). Die Zusatzbelohnung gibt es nur bei Inhaltsqualität „Ausgezeichnet“.
+Hintergrund und Belege: `analyse/rpm-analyse.md`. RPM = Standardbelohnung (≈ €0,05–0,11) + Zusätzliche Belohnung (Qualitäts-Multiplikator, bis ~19×). Die Zusatzbelohnung gibt es nur bei Inhaltsqualität „Ausgezeichnet“ – der RPM ist praktisch binär (Standard ≈ €0,11, Ausgezeichnet ≈ €2,15–2,34). Entscheidend laut eigenen Daten: originale Geschichte + werbefreundliches, harmloses Thema; Bindung/Länge/Hashtags/Format-Gerüst trennen nicht.
 - Voraussetzungen: > 60 s, eigenes Material, For-You-tauglich (kein Body-Shaming/Körperbild, keine Gewalt), keine Richtlinien-Verstöße
 - Qualifizierte Aufrufe zählen erst ab 5 s → die ersten 5 s müssen halten (starker erster Satz, klares erstes Bild)
 - Bewertet werden Ø Wiedergabezeit, Bindung 30/60 s, Abschlussrate, Suchwert, Machart/Originalität, Werbefreundlichkeit des Themas
 - **Keine Varianten derselben Geschichte** (gleiche Story mit neuem Rahmen → „Standard“, €0 extra)
 - **Coverbild pro Video:** `<projekt>/cover.png` (1080×1920) rendern: Star-Objekt groß, Hauptfigur mit deutlicher Mimik, 2–3 Wörter Titel oben (nicht im Untertitelbereich); mitliefern
-- **Hinweise zum Hochladen (dem Nutzer mitgeben):** suchbarer Titel („Was ist X? Erklärt in Minecraft“), passende Hashtags (#minecraft #erklärt #lernen + Thema, kein #roblox), KI-Label setzen, falls TikTok es anbietet; ein Video pro Thema; in TikTok Studio nach RPM statt Aufrufen auswerten
+- **Hinweise zum Hochladen (dem Nutzer mitgeben):** suchbarer Titel („Was ist X? Erklärt in Minecraft“), passende Hashtags (#minecraft #erklärt #lernen + Thema), KI-Label setzen, falls TikTok es anbietet; ein Video pro Thema; in TikTok Studio nach RPM statt Aufrufen auswerten
